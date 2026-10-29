@@ -1,0 +1,99 @@
+{
+  "legion": {
+    "label": "Legion Square Parking",
+    "type": "car",
+    "coords": {
+      "x": 215.8,
+      "y": -810.1,
+      "z": 30.73
+    },
+    "radius": 18,
+    "spawn": {
+      "x": 229.7,
+      "y": -800.1,
+      "z": 30.57,
+      "heading": 158
+    },
+    "jobs": [],
+    "impound": false,
+    "blip": true
+  },
+  "pillbox": {
+    "label": "Pillbox Parking",
+    "type": "car",
+    "coords": {
+      "x": 276.6,
+      "y": -344.7,
+      "z": 44.92
+    },
+    "radius": 16,
+    "spawn": {
+      "x": 285.0,
+      "y": -338.6,
+      "z": 44.92,
+      "heading": 160
+    },
+    "jobs": [],
+    "impound": false,
+    "blip": true
+  },
+  "mrpd": {
+    "label": "Mission Row Police Garage",
+    "type": "car",
+    "coords": {
+      "x": 454.6,
+      "y": -1017.4,
+      "z": 28.43
+    },
+    "radius": 12,
+    "spawn": {
+      "x": 438.4,
+      "y": -1018.3,
+      "z": 27.7,
+      "heading": 90
+    },
+    "jobs": [
+      "police"
+    ],
+    "impound": false,
+    "blip": false
+  },
+  "impound": {
+    "label": "Impound Lot",
+    "type": "car",
+    "coords": {
+      "x": 409.3,
+      "y": -1623.1,
+      "z": 29.29
+    },
+    "radius": 10,
+    "spawn": {
+      "x": 401.8,
+      "y": -1632.6,
+      "z": 29.29,
+      "heading": 228
+    },
+    "jobs": [],
+    "impound": true,
+    "blip": true
+  },
+  "marina": {
+    "label": "Marina",
+    "type": "boat",
+    "coords": {
+      "x": -794.7,
+      "y": -1510.8,
+      "z": 1.6
+    },
+    "radius": 14,
+    "spawn": {
+      "x": -808.4,
+      "y": -1514.9,
+      "z": 0.1,
+      "heading": 110
+    },
+    "jobs": [],
+    "impound": false,
+    "blip": true
+  }
+}

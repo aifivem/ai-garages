@@ -1,0 +1,7 @@
+{
+  "impoundFee": 500,
+  "accounts": [
+    "cash",
+    "bank"
+  ]
+}
