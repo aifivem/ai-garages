@@ -1,14 +1,14 @@
-import { PLACE_PED_SPEC, placePedFields } from "@aicore-fivem/lib/shared";
+import {
+  BLIP_STYLE_FIELDS,
+  PLACE_PED_SPEC,
+  placePedFields,
+} from "@aicore-fivem/lib/shared";
 import type { PanelSchema } from "@aicore-fivem/shared";
 import { DEFAULT_BLIPS } from "common/garages";
 
 const BLIP = {
   type: "object" as const,
-  fields: {
-    sprite: { type: "number" as const, min: 0, max: 1000, integer: true },
-    color: { type: "number" as const, min: 0, max: 100, integer: true },
-    scale: { type: "number" as const, min: 0.3, max: 2 },
-  },
+  fields: BLIP_STYLE_FIELDS,
 };
 
 /** ai-garages' panel: garages, job garages, impound lots and the impound fee. */

@@ -2,12 +2,13 @@ import {
   bool,
   int,
   num,
+  type PlacePed,
+  readBlipStyle,
+  readPlacePed,
   record,
   str,
   vec4,
   type Vec4,
-  readPlacePed,
-  type PlacePed,
 } from "@aicore-fivem/lib/shared";
 
 /** ai-garages' contracts and panel content. No natives. */
@@ -63,11 +64,7 @@ export const DEFAULT_BLIPS: Settings["blips"] = {
 
 const readBlip = (v: unknown, d: BlipStyle): BlipStyle => {
   const r = record(v);
-  return {
-    sprite: int(r.sprite, d.sprite, 0, 1000),
-    color: int(r.color, d.color, 0, 100),
-    scale: num(r.scale, d.scale, 0.3, 2),
-  };
+  return readBlipStyle(r, { sprite: d.sprite, color: d.color, scale: d.scale });
 };
 
 /** One row of the garage screen. */

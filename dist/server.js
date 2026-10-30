@@ -69,7 +69,35 @@ function readText(value, max) {
 const fail = (error) => ({
 	ok: !1,
 	error
-}), isObject = (value) => typeof value == "object" && !!value && !Array.isArray(value);
+}), BLIP_STYLE_FIELDS = {
+	sprite: {
+		type: "number",
+		min: 0,
+		max: 1e3,
+		integer: !0
+	},
+	color: {
+		type: "number",
+		min: 0,
+		max: 100,
+		integer: !0
+	},
+	scale: {
+		type: "number",
+		min: .3,
+		max: 2
+	}
+};
+function readBlipStyle(value, fallback) {
+	let v = record(value);
+	return {
+		sprite: int(v.sprite, fallback.sprite, 0, 1e3),
+		color: int(v.color, fallback.color, 0, 100),
+		scale: num(v.scale, fallback.scale, .3, 2)
+	};
+}
+// ../../../packages/lib/src/shared/records.ts
+const isObject = (value) => typeof value == "object" && !!value && !Array.isArray(value);
 function readRecords(raw, readOne) {
 	let out = new Map();
 	if (!isObject(raw)) return out;
@@ -1037,6 +1065,10 @@ var OnlinePlayers = class {
 	character(source) {
 		return this.start(), this.players.get(source)?.character ?? null;
 	}
+	name(source, options = {}) {
+		let c = this.character(source);
+		return c ? `${c.firstname} ${c.lastname}` : options.fallback === !1 ? "" : GetPlayerName(String(source));
+	}
 	jobs(source) {
 		return this.start(), this.players.get(source)?.jobNames ?? [];
 	}
@@ -1326,14 +1358,11 @@ const EVENTS = {
 		color: 1,
 		scale: .6
 	}
-}, readBlip = (v, d) => {
-	let r = record(v);
-	return {
-		sprite: int(r.sprite, d.sprite, 0, 1e3),
-		color: int(r.color, d.color, 0, 100),
-		scale: num(r.scale, d.scale, .3, 2)
-	};
-}, TYPES = [
+}, readBlip = (v, d) => readBlipStyle(record(v), {
+	sprite: d.sprite,
+	color: d.color,
+	scale: d.scale
+}), TYPES = [
 	"car",
 	"boat",
 	"air"
@@ -1380,25 +1409,7 @@ function readSettings(raw) {
 // resource/server/schema.ts
 const BLIP = {
 	type: "object",
-	fields: {
-		sprite: {
-			type: "number",
-			min: 0,
-			max: 1e3,
-			integer: !0
-		},
-		color: {
-			type: "number",
-			min: 0,
-			max: 100,
-			integer: !0
-		},
-		scale: {
-			type: "number",
-			min: .3,
-			max: 2
-		}
-	}
+	fields: BLIP_STYLE_FIELDS
 }, garagesSchema = {
 	title: "ADMIN_TITLE",
 	icon: "square-parking",
