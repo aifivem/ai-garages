@@ -1,6 +1,6 @@
 # ai-garages
 
-Garages from the admin panel: public garages for owned vehicles, job garages for a job's fleet, impound lots for vehicles lost in the world (fee). Park while driving inside the area, open the list on foot. Depends on ai-core (characters, jobs, money, prompts, admin panel) and ai-vehicles (storage, spawning). Research and decisions: `docs/research/vehicles.md`.
+Garages from the admin panel: public garages for owned vehicles, job garages for a job's fleet, impound lots for vehicles lost in the world (fee). Park while driving inside the area, open the list on foot. Depends on ai-core (characters, jobs, money, prompts, admin panel) and ai-vehicles (storage, spawning).
 
 ## Decisions
 
