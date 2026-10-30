@@ -2,6 +2,7 @@ import {
   AdminWorld,
   cache,
   getVehicleProps,
+  hud,
   loadLocaleTexts,
   notify,
   onCache,
@@ -106,6 +107,7 @@ class Garages {
     );
     this.open = id;
     SetNuiFocus(true, true);
+    hud.hide("garage");
     send({ action: "open", data: { texts, list, labels } });
   }
 
@@ -142,6 +144,7 @@ class Garages {
   close(): void {
     this.open = null;
     SetNuiFocus(false, false);
+    hud.show("garage");
     send({ action: "close", data: null });
   }
 }
