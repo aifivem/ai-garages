@@ -3,10 +3,12 @@ import {
   cache,
   callAction,
   getVehicleProps,
+  hasJob,
   hud,
   loadLocaleTexts,
   notify,
   onCache,
+  onMembershipChange,
   Points,
   vehicleLabel,
 } from "@aicore-fivem/lib/client";
@@ -65,13 +67,17 @@ class Garages {
         radius: garage.radius,
         height: 10,
         targetRadius: 2,
-        blip: garage.blip
-          ? {
-              ...settings.value.blips[garage.impound ? "impound" : garage.type],
-              label: garage.label,
-            }
-          : undefined,
-        canShow: () => !driving(),
+        // A job fleet garage shows (and has a blip) only for that job's members.
+        blip:
+          garage.blip && (garage.jobs.length === 0 || hasJob(garage.jobs))
+            ? {
+                ...settings.value.blips[
+                  garage.impound ? "impound" : garage.type
+                ],
+                label: garage.label,
+              }
+            : undefined,
+        canShow: () => !driving() && hasJob(garage.jobs),
         onPressed: () => this.openList(garage.id),
       });
     }
@@ -130,6 +136,8 @@ const garages = new Garages();
 garages.rebuild();
 world.onChange("garages", () => garages.rebuild());
 world.onChange("settings", () => garages.rebuild());
+// Blips follow memberships: a rebuild (rare: joining or leaving a job).
+onMembershipChange(() => garages.rebuild());
 onCache("seat", () => garages.points.refresh());
 
 RegisterNuiCallback("takeOut", (data: unknown, cb: (r: unknown) => void) => {
