@@ -109,8 +109,9 @@ function parkableBy(source: number, vehicle: number): boolean {
 }
 
 /**
- * What parking stores: the server's look and tuning (only ai-mechanic changes them) with the client's dirt and the
- * server's health. A vehicle without a stored look keeps the client's colours, never its mods (no paid tuning yet).
+ * What parking stores: the server's look (the entity's props bag, else the stored props) with the client's dirt and
+ * the server's health; a vehicle without a stored look takes the client's colours. ai-vehicles' `SaveVehicle` keeps
+ * the stored mods and neon either way (only ai-mechanic's `SaveTuning` changes them).
  */
 function parkedProps(
   client: VehicleProps,
@@ -125,13 +126,7 @@ function parkedProps(
     bodyHealth: GetVehicleBodyHealth(entity),
   };
   const known = propsBag.get(entity) ?? toVehicleProps(vehicle.props);
-  if (known) return { ...known, ...health };
-  return {
-    ...client,
-    ...health,
-    mods: {},
-    neon: [false, false, false, false],
-  };
+  return { ...(known ?? client), ...health };
 }
 
 onClientCallback(
