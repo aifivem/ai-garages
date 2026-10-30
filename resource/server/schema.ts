@@ -37,6 +37,7 @@ export const garagesSchema: PanelSchema = {
       listSub: "type",
       createLabel: "ADMIN_NEW_GARAGE",
       deleteLabel: "ADMIN_DELETE_GARAGE",
+      deleteDesc: "ADMIN_DELETE_GARAGE_DESC",
       cards: [
         {
           icon: "square-parking",
