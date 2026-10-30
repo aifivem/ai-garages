@@ -16,5 +16,5 @@ Garages from the admin panel: public garages for owned vehicles, job garages for
 ## Entry points
 
 - Server: list, take out, park `resource/server/index.ts`; panel `server/schema.ts`.
-- Client: zones, prompts, blips, NUI bridge `resource/client/index.ts`.
+- Client: garage points (lib `Points`, blip on the "open" point), NUI bridge `resource/client/index.ts`.
 - NUI (tgiann-realparking look): `web/src/App.tsx`, rows `web/src/features/VehicleRow.tsx`; browser preview `bun run webdev` (`?impound=1`).
