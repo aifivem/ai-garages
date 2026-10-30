@@ -1,4 +1,5 @@
 {
+  "$schema": "./schemas/garages.schema.json",
   "legion": {
     "label": "Legion Square Parking",
     "type": "car",
@@ -28,7 +29,7 @@
     },
     "radius": 16,
     "spawn": {
-      "x": 285.0,
+      "x": 285,
       "y": -338.6,
       "z": 44.92,
       "heading": 160

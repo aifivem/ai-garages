@@ -1,0 +1,112 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ai-garages/data/garages.json",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "This file's JSON Schema (for editors)."
+    }
+  },
+  "patternProperties": {
+    "^[a-z0-9_]{2,32}$": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "description": "Name",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 48
+        },
+        "type": {
+          "description": "Vehicles",
+          "enum": [
+            "car",
+            "boat",
+            "air"
+          ]
+        },
+        "coords": {
+          "description": "Area centre: Stand in the middle of the parking area and use your position.",
+          "type": "object",
+          "required": [
+            "x",
+            "y",
+            "z"
+          ],
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            },
+            "z": {
+              "type": "number"
+            }
+          }
+        },
+        "radius": {
+          "description": "Area: How far from the centre players can park or open the garage.",
+          "type": "number",
+          "minimum": 2,
+          "maximum": 50
+        },
+        "spawn": {
+          "description": "Exit point: Where taken out vehicles appear, facing your direction.",
+          "type": "object",
+          "required": [
+            "x",
+            "y",
+            "z",
+            "heading"
+          ],
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            },
+            "z": {
+              "type": "number"
+            },
+            "heading": {
+              "type": "number"
+            }
+          }
+        },
+        "jobs": {
+          "description": "Jobs: Empty: a public garage for owned vehicles. Otherwise the fleet of these jobs.",
+          "type": "array",
+          "maxItems": 20,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "maxLength": 32,
+            "pattern": "^[a-z0-9_]{2,32}$"
+          }
+        },
+        "impound": {
+          "description": "Impound lot: Lists towed and lost vehicles for a fee instead of parked ones.",
+          "type": "boolean"
+        },
+        "blip": {
+          "description": "Map blip",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "label",
+        "type",
+        "coords",
+        "radius",
+        "spawn",
+        "jobs",
+        "impound",
+        "blip"
+      ]
+    }
+  },
+  "additionalProperties": false
+}
