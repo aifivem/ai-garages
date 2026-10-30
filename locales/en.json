@@ -15,6 +15,7 @@
   "UI_FUEL": "Fuel",
   "UI_ENGINE": "Engine",
   "UI_BODY": "Body",
+  "UI_PLATE": "Plate",
   "UI_TAKE_OUT": "Take out",
   "UI_TAKE_OUT_FEE": "Pay ${0}",
   "UI_EMPTY": "No vehicles here",
