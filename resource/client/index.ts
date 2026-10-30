@@ -8,6 +8,7 @@ import {
   notify,
   onCache,
   Points,
+  vehicleLabel,
 } from "@aicore-fivem/lib/client";
 import { isRecord, readId } from "@aicore-fivem/lib/shared";
 import { Locale } from "common";
@@ -85,7 +86,7 @@ class Garages {
     const labels = Object.fromEntries(
       list.vehicles.map((v) => [
         v.model,
-        GetLabelText(GetDisplayNameFromVehicleModel(GetHashKey(v.model))),
+        vehicleLabel(v.model),
       ]),
     );
     this.open = id;
