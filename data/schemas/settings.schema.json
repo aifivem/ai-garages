@@ -23,10 +23,122 @@
         "maxLength": 32,
         "pattern": "^[a-z0-9_]{2,32}$"
       }
+    },
+    "blips": {
+      "type": "object",
+      "properties": {
+        "car": {
+          "description": "Cars",
+          "type": "object",
+          "properties": {
+            "sprite": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000
+            },
+            "color": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "scale": {
+              "type": "number",
+              "minimum": 0.3,
+              "maximum": 2
+            }
+          },
+          "required": [
+            "sprite",
+            "color",
+            "scale"
+          ]
+        },
+        "boat": {
+          "description": "Boats",
+          "type": "object",
+          "properties": {
+            "sprite": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000
+            },
+            "color": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "scale": {
+              "type": "number",
+              "minimum": 0.3,
+              "maximum": 2
+            }
+          },
+          "required": [
+            "sprite",
+            "color",
+            "scale"
+          ]
+        },
+        "air": {
+          "description": "Aircraft",
+          "type": "object",
+          "properties": {
+            "sprite": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000
+            },
+            "color": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "scale": {
+              "type": "number",
+              "minimum": 0.3,
+              "maximum": 2
+            }
+          },
+          "required": [
+            "sprite",
+            "color",
+            "scale"
+          ]
+        },
+        "impound": {
+          "description": "Impound lot",
+          "type": "object",
+          "properties": {
+            "sprite": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000
+            },
+            "color": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "scale": {
+              "type": "number",
+              "minimum": 0.3,
+              "maximum": 2
+            }
+          },
+          "required": [
+            "sprite",
+            "color",
+            "scale"
+          ]
+        }
+      },
+      "required": [
+        "car",
+        "boat",
+        "air",
+        "impound"
+      ]
     }
   },
-  "required": [
-    "impoundFee",
-    "accounts"
-  ]
+  "required": []
 }

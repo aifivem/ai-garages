@@ -41,10 +41,34 @@ export interface Garage {
   blip: boolean;
 }
 
+export interface BlipStyle {
+  sprite: number;
+  color: number;
+  scale: number;
+}
+
 export interface Settings {
   impoundFee: number;
   accounts: string[];
+  /** Map blip look per garage type, impound lots apart. */
+  blips: Record<GarageType | "impound", BlipStyle>;
 }
+
+export const DEFAULT_BLIPS: Settings["blips"] = {
+  car: { sprite: 357, color: 3, scale: 0.6 },
+  boat: { sprite: 356, color: 3, scale: 0.6 },
+  air: { sprite: 359, color: 3, scale: 0.6 },
+  impound: { sprite: 68, color: 1, scale: 0.6 },
+};
+
+const readBlip = (v: unknown, d: BlipStyle): BlipStyle => {
+  const r = record(v);
+  return {
+    sprite: int(r.sprite, d.sprite, 0, 1000),
+    color: int(r.color, d.color, 0, 100),
+    scale: num(r.scale, d.scale, 0.3, 2),
+  };
+};
 
 /** One row of the garage screen. */
 export interface GarageVehicle {
@@ -103,9 +127,16 @@ export function readSettings(raw: unknown): Settings {
   const accounts = Array.isArray(s.accounts)
     ? s.accounts.filter((a): a is string => typeof a === "string")
     : [];
+  const blips = record(s.blips);
   return {
     impoundFee: int(s.impoundFee, 500, 0, 1_000_000),
     accounts: accounts.length ? accounts : ["cash", "bank"],
+    blips: {
+      car: readBlip(blips.car, DEFAULT_BLIPS.car),
+      boat: readBlip(blips.boat, DEFAULT_BLIPS.boat),
+      air: readBlip(blips.air, DEFAULT_BLIPS.air),
+      impound: readBlip(blips.impound, DEFAULT_BLIPS.impound),
+    },
   };
 }
 

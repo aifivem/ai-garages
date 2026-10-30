@@ -1,5 +1,15 @@
 import { PLACE_PED_SPEC, placePedFields } from "@aicore-fivem/lib/shared";
 import type { PanelSchema } from "@aicore-fivem/shared";
+import { DEFAULT_BLIPS } from "common/garages";
+
+const BLIP = {
+  type: "object" as const,
+  fields: {
+    sprite: { type: "number" as const, min: 0, max: 1000, integer: true },
+    color: { type: "number" as const, min: 0, max: 100, integer: true },
+    scale: { type: "number" as const, min: 0.3, max: 2 },
+  },
+};
 
 /** ai-garages' panel: garages, job garages, impound lots and the impound fee. */
 export const garagesSchema: PanelSchema = {
@@ -50,6 +60,15 @@ export const garagesSchema: PanelSchema = {
           itemMax: 32,
           pattern: "^[a-z0-9_]{2,32}$",
         },
+        blips: {
+          type: "object",
+          fields: { car: BLIP, boat: BLIP, air: BLIP, impound: BLIP },
+        },
+      },
+      defaults: {
+        impoundFee: 500,
+        accounts: ["cash", "bank"],
+        blips: DEFAULT_BLIPS,
       },
     },
   },
@@ -165,6 +184,21 @@ export const garagesSchema: PanelSchema = {
               label: "ADMIN_F_ACCOUNTS",
               hint: "ADMIN_H_ACCOUNTS",
               placeholder: "ADMIN_P_ACCOUNTS",
+            },
+          ],
+        },
+        {
+          icon: "map-location-dot",
+          title: "ADMIN_C_BLIPS",
+          desc: "ADMIN_C_BLIPS_DESC",
+          fields: [
+            { widget: "blip", path: "blips.car", label: "ADMIN_O_CAR" },
+            { widget: "blip", path: "blips.boat", label: "ADMIN_O_BOAT" },
+            { widget: "blip", path: "blips.air", label: "ADMIN_O_AIR" },
+            {
+              widget: "blip",
+              path: "blips.impound",
+              label: "ADMIN_F_IMPOUND",
             },
           ],
         },

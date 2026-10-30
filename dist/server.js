@@ -55,8 +55,21 @@ function vec4(value, fallback) {
 		heading: num(v.heading, fallback.heading)
 	};
 }
-// ../../../packages/lib/src/shared/records.ts
-const isObject = (value) => typeof value == "object" && !!value && !Array.isArray(value);
+// ../../../packages/lib/src/shared/strict.ts
+function readInt(value, min, max) {
+	return Number.isInteger(value) && value >= min && value <= max ? value : null;
+}
+const readId = (value) => readInt(value, 1, 2147483647);
+function readText(value, max) {
+	if (typeof value != "string") return null;
+	let text = value.trim();
+	return text ? text.slice(0, max) : null;
+}
+// ../../../packages/lib/src/shared/action.ts
+const fail = (error) => ({
+	ok: !1,
+	error
+}), isObject = (value) => typeof value == "object" && !!value && !Array.isArray(value);
 function readRecords(raw, readOne) {
 	let out = new Map();
 	if (!isObject(raw)) return out;
@@ -105,6 +118,53 @@ var FileViews = class {
 		parsed === null ? this.map.delete(key) : this.map.set(key, parsed);
 	}
 };
+// ../../../packages/lib/src/shared/vehicleProps.ts
+const isObj = (v) => typeof v == "object" && !!v && !Array.isArray(v), nums = (v, n) => Array.isArray(v) && v.length === n && v.every((x) => typeof x == "number") ? v : null;
+function toVehicleProps(v) {
+	if (!isObj(v) || v.v !== 1 || typeof v.model != "number" || typeof v.plate != "string") return null;
+	let colors = nums(v.colors, 2), extraColors = nums(v.extraColors, 2), neonColor = nums(v.neonColor, 3), tyreSmoke = nums(v.tyreSmoke, 3);
+	if (!colors || !extraColors || !neonColor || !tyreSmoke || !isObj(v.mods) || !isObj(v.extras) || !Array.isArray(v.neon)) return null;
+	let mods = {};
+	for (let [k, x] of Object.entries(v.mods)) typeof x == "number" && (mods[Number(k)] = x);
+	let extras = {};
+	for (let [k, x] of Object.entries(v.extras)) typeof x == "boolean" && (extras[Number(k)] = x);
+	let n = (x, d) => typeof x == "number" ? x : d, rgb = (x) => nums(x, 3);
+	return {
+		v: 1,
+		model: v.model,
+		plate: v.plate.slice(0, 8),
+		plateIndex: n(v.plateIndex, 0),
+		colors: [colors[0] ?? 0, colors[1] ?? 0],
+		extraColors: [extraColors[0] ?? 0, extraColors[1] ?? 0],
+		customPrimary: rgb(v.customPrimary),
+		customSecondary: rgb(v.customSecondary),
+		wheelType: n(v.wheelType, 0),
+		windowTint: n(v.windowTint, -1),
+		livery: n(v.livery, -1),
+		mods,
+		xenonColor: n(v.xenonColor, 255),
+		neon: [
+			0,
+			1,
+			2,
+			3
+		].map((i) => v.neon instanceof Array && v.neon[i] === !0),
+		neonColor: [
+			neonColor[0] ?? 255,
+			neonColor[1] ?? 0,
+			neonColor[2] ?? 255
+		],
+		tyreSmoke: [
+			tyreSmoke[0] ?? 255,
+			tyreSmoke[1] ?? 255,
+			tyreSmoke[2] ?? 255
+		],
+		extras,
+		dirt: n(v.dirt, 0),
+		engineHealth: n(v.engineHealth, 1e3),
+		bodyHealth: n(v.bodyHealth, 1e3)
+	};
+}
 // ../../../packages/lib/src/shared/placePed.ts
 const isRecord$1 = (v) => typeof v == "object" && !!v && !Array.isArray(v), SCENARIOS = [
 	"",
@@ -297,7 +357,7 @@ const CORE = {
 	clientPlayerLoadedEvent: "ai-core:client:playerLoaded",
 	clientPlayerUnloadedEvent: "ai-core:client:playerUnloaded",
 	clientCharacterPortraitEvent: "ai-core:client:characterPortrait",
-	clientCharacterLookEvent: "ai-core:client:characterLook",
+	characterLooksEvent: "ai-core:client:characterLooks",
 	clientPromptPressedEvent: "ai-core:client:promptPressed",
 	clientCacheEvent: "ai-core:client:cache",
 	clientHudVisibleEvent: "ai-core:client:hudVisible",
@@ -320,6 +380,12 @@ const CORE = {
 	recommendationEvent: "ai-core:admin:recommendation",
 	worldEvent: (resource) => `${resource}:admin:world`,
 	worldChangesCallback: (resource) => `${resource}:admin:worldChanges`
+}, VEHICLE_BAGS = {
+	owned: "ai:owned",
+	id: "ai:vid",
+	props: "ai:props",
+	setup: "ai:setup",
+	fuel: "fuel"
 }, named = new Set();
 function registerExport(name, handler) {
 	named.add(name), globalThis.exports(name, handler);
@@ -354,6 +420,19 @@ function loadLocaleTexts(resource = GetCurrentResourceName()) {
 }
 // ../../../packages/lib/src/fivem/callbackNames.ts
 const requestEvent = (name) => `aicore:cb:${name}`, responseEvent = (resource) => `aicore:cbr:${resource}`;
+// ../../../packages/lib/src/server/position.ts
+function entityCoords(entity) {
+	let [x = 0, y = 0, z = 0] = GetEntityCoords(entity);
+	return {
+		x,
+		y,
+		z
+	};
+}
+function isNear(source, point, metres) {
+	let [x = 0, y = 0, z = 0] = GetEntityCoords(GetPlayerPed(String(source))), dx = x - point.x, dy = y - point.y, dz = z - point.z;
+	return dx * dx + dy * dy + dz * dz <= metres * metres;
+}
 resourceExport(CORE.resource);
 const log$5 = createLogger(GetCurrentResourceName()), gates = new Set();
 on("playerDropped", () => {
@@ -463,7 +542,7 @@ function toPatch(value) {
 		default: return null;
 	}
 }
-const clone = (value) => value === void 0 ? value : JSON.parse(JSON.stringify(value)), core$14 = resourceExport(CORE.resource), ERR = {
+const clone = (value) => value === void 0 ? value : JSON.parse(JSON.stringify(value)), core$15 = resourceExport(CORE.resource), ERR = {
 	type: "ADMIN_ERR_TYPE",
 	range: "ADMIN_ERR_RANGE",
 	length: "ADMIN_ERR_LENGTH",
@@ -477,7 +556,7 @@ const clone = (value) => value === void 0 ? value : JSON.parse(JSON.stringify(va
 		if (cached && Date.now() - cached.at < 2e3) return cached.values.size > 0 ? cached.values : null;
 		let list = [];
 		try {
-			list = core$14.GetLookupValues(source);
+			list = core$15.GetLookupValues(source);
 		} catch {}
 		let values = new Set(Array.isArray(list) ? list.filter((v) => typeof v == "string") : []);
 		return this.lists.set(source, {
@@ -680,7 +759,7 @@ function writeSchema(resource, name, text, log) {
 	(0, node_fs_promises.mkdir)(dir, { recursive: !0 }).then(() => (0, node_fs_promises.writeFile)(`${dir}/${name}.schema.json`, text, "utf8")).catch((error) => log.error(`writing ${resource}/${path} failed`, error));
 }
 // ../../../packages/lib/src/server/admin/panel.ts
-const core$13 = resourceExport(CORE.resource), DEFAULT_KEY = "^[a-z0-9_]{2,32}$";
+const core$14 = resourceExport(CORE.resource), DEFAULT_KEY = "^[a-z0-9_]{2,32}$";
 function imported(spec, value) {
 	let base = clone(spec.newRecord ?? {}), out = {};
 	for (let name of Object.keys(spec.sections)) {
@@ -704,7 +783,7 @@ var AdminPanel = class {
 	constructor(schema) {
 		this.schema = schema;
 		for (let [name, spec] of Object.entries(schema.files)) this.load(name, spec);
-		registerExport("AdminPanelSnapshot", () => this.snapshot()), registerExport("AdminPanelApply", (admin, patch) => this.apply(admin, patch)), onClientCallback(ADMIN.worldChangesCallback(this.resource), () => Object.fromEntries(this.worldChanges)), setImmediate(() => core$13.RegisterAdminPanel(this.resource));
+		registerExport("AdminPanelSnapshot", () => this.snapshot()), registerExport("AdminPanelApply", (admin, patch) => this.apply(admin, patch)), onClientCallback(ADMIN.worldChangesCallback(this.resource), () => Object.fromEntries(this.worldChanges)), setImmediate(() => core$14.RegisterAdminPanel(this.resource));
 	}
 	get(file) {
 		return this.data.get(file) ?? {};
@@ -838,7 +917,7 @@ var AdminPanel = class {
 		let spec = this.schema.files[file], data = this.get(file), value = key === void 0 ? data : data[key] ?? null;
 		this.dataFiles.get(file)?.write(data), this.views.changed(file, key, value);
 		for (let handler of this.handlers.get(file) ?? []) handler(key, value);
-		if (core$13.AdminPanelChanged({
+		if (core$14.AdminPanelChanged({
 			resource: this.resource,
 			file,
 			key,
@@ -868,7 +947,7 @@ function aiLogChannels(channels) {
 }
 resourceExport(CORE.resource);
 // ../../../packages/lib/src/server/online.ts
-const core$11 = resourceExport(CORE.resource);
+const core$12 = resourceExport(CORE.resource);
 var OnlinePlayers = class {
 	players = new Map();
 	onDuty = new Map();
@@ -877,7 +956,7 @@ var OnlinePlayers = class {
 		if (this.started) return;
 		this.started = !0;
 		let load = (source, character) => {
-			this.put(source, character, (core$11.GetJobs(source) ?? []).map((m) => m.job), (core$11.GetGangs(source) ?? []).map((m) => m.gang)), this.setDuty(source, core$11.GetDutyJob(source));
+			this.put(source, character, (core$12.GetJobs(source) ?? []).map((m) => m.job), (core$12.GetGangs(source) ?? []).map((m) => m.gang)), this.setDuty(source, core$12.GetDutyJob(source));
 		};
 		on(CORE.playerLoadedEvent, load), on(CORE.playerUnloadedEvent, (source) => this.drop(source)), on(CORE.jobsChangedEvent, (source, jobs) => {
 			let player = this.players.get(source);
@@ -886,8 +965,8 @@ var OnlinePlayers = class {
 			let player = this.players.get(source);
 			player && (player.gangs = gangs.map((m) => m.gang));
 		}), on(CORE.dutyChangedEvent, (source, job) => this.setDuty(source, job));
-		for (let source of core$11.GetLoadedSources()) {
-			let character = core$11.GetCharacter(source);
+		for (let source of core$12.GetLoadedSources()) {
+			let character = core$12.GetCharacter(source);
 			character && load(source, character);
 		}
 	}
@@ -930,8 +1009,15 @@ var OnlinePlayers = class {
 		return this.start(), this.onDuty.get(job) ?? EMPTY;
 	}
 };
-const EMPTY = new Set();
-new OnlinePlayers(), resourceExport(CORE.resource), resourceExport(CORE.resource), createLogger(GetCurrentResourceName());
+const EMPTY = new Set(), online = new OnlinePlayers();
+resourceExport(CORE.resource);
+// ../../../packages/lib/src/server/vehicle.ts
+function vehicleFromNet(netId) {
+	if (readId(netId) === null) return 0;
+	let entity = NetworkGetEntityFromNetworkId(netId);
+	return entity && DoesEntityExist(entity) && GetEntityType(entity) === 2 ? entity : 0;
+}
+resourceExport(CORE.resource), createLogger(GetCurrentResourceName());
 // ../../../packages/lib/src/server/command.ts
 const resource = GetCurrentResourceName();
 createLogger(resource), new class {
@@ -959,12 +1045,100 @@ createLogger(resource), new class {
 			if (name === resource) for (let command of this.list) for (let n of command.info.names) emitNet("chat:removeSuggestion", -1, `/${n}`);
 		});
 	}
-}(), createLogger(GetCurrentResourceName()), createLogger("aicore-lib"), IsDuplicityVersion(), resourceExport(CORE.resource), resourceExport(CORE.resource), resourceExport(CORE.resource), resourceExport(CORE.resource), resourceExport(CORE.resource), resourceExport(CORE.resource), resourceExport(CORE.resource), resourceExport(CORE.resource);
+}(), createLogger(GetCurrentResourceName()), createLogger("aicore-lib");
+// ../../../packages/lib/src/fivem/state.ts
+const isServer = IsDuplicityVersion();
+var Mirror = class {
+	key;
+	parse;
+	values = new Map();
+	listeners = new Set();
+	constructor(key, parse) {
+		this.key = key, this.parse = parse;
+	}
+	onChange(listener) {
+		return this.listeners.add(listener), () => this.listeners.delete(listener);
+	}
+	store(id, raw) {
+		this.apply(id, raw == null ? void 0 : this.parse(raw));
+	}
+	apply(id, value) {
+		let old = this.values.get(id);
+		if (this.values.set(id, value), old !== value) for (let listener of this.listeners) listener(id, value, old);
+	}
+}, EntityState$1 = class extends Mirror {
+	handles = new Map();
+	constructor(key, parse) {
+		super(key, parse), AddStateBagChangeHandler(key, "", (bag, _key, value) => {
+			if (!bag.startsWith("entity:")) return;
+			let netId = Number(bag.slice(7));
+			this.handles.set(netId, GetEntityFromStateBagName(bag)), this.store(netId, value);
+		}), isServer ? on("entityRemoved", (entity) => this.forget(NetworkGetNetworkIdFromEntity(entity))) : setInterval(() => this.prune(), 3e4);
+	}
+	get(entity) {
+		if (!entity) return;
+		let netId = NetworkGetNetworkIdFromEntity(entity), handle = this.handles.get(netId);
+		if (handle === entity) return this.values.get(netId);
+		if (handle === 0 && this.values.has(netId)) return this.handles.set(netId, entity), this.values.get(netId);
+		this.handles.set(netId, entity);
+		let value = this.parseRaw(Entity(entity).state[this.key]);
+		return this.values.set(netId, value), value;
+	}
+	put(entity, value) {
+		let netId = NetworkGetNetworkIdFromEntity(entity);
+		this.handles.set(netId, entity), this.apply(netId, value);
+	}
+	getByNetId(netId) {
+		return this.values.get(netId);
+	}
+	forget(netId) {
+		this.values.delete(netId), this.handles.delete(netId);
+	}
+	parseRaw(raw) {
+		return raw == null ? void 0 : this.parse(raw);
+	}
+	prune() {
+		for (let netId of this.values.keys()) DoesEntityExist(NetworkGetEntityFromNetworkId(netId)) || this.forget(netId);
+	}
+}, EntityState = class extends EntityState$1 {
+	set(entity, value) {
+		DoesEntityExist(entity) && (Entity(entity).state.set(this.key, value ?? null, !0), this.put(entity, value));
+	}
+};
+resourceExport(CORE.resource), resourceExport(CORE.resource), resourceExport(CORE.resource), resourceExport(CORE.resource), resourceExport(CORE.resource), resourceExport(CORE.resource), resourceExport(CORE.resource), resourceExport(CORE.resource), resourceExport(CORE.resource);
 // resource/common/garages.ts
 const EVENTS = {
 	list: "ai-garages:list",
 	takeOut: "ai-garages:takeOut",
 	park: "ai-garages:park"
+}, DEFAULT_BLIPS = {
+	car: {
+		sprite: 357,
+		color: 3,
+		scale: .6
+	},
+	boat: {
+		sprite: 356,
+		color: 3,
+		scale: .6
+	},
+	air: {
+		sprite: 359,
+		color: 3,
+		scale: .6
+	},
+	impound: {
+		sprite: 68,
+		color: 1,
+		scale: .6
+	}
+}, readBlip = (v, d) => {
+	let r = record(v);
+	return {
+		sprite: int(r.sprite, d.sprite, 0, 1e3),
+		color: int(r.color, d.color, 0, 100),
+		scale: num(r.scale, d.scale, .3, 2)
+	};
 }, TYPES = [
 	"car",
 	"boat",
@@ -997,14 +1171,41 @@ function readGarages(raw) {
 	return out;
 }
 function readSettings(raw) {
-	let s = record(raw), accounts = Array.isArray(s.accounts) ? s.accounts.filter((a) => typeof a == "string") : [];
+	let s = record(raw), accounts = Array.isArray(s.accounts) ? s.accounts.filter((a) => typeof a == "string") : [], blips = record(s.blips);
 	return {
 		impoundFee: int(s.impoundFee, 500, 0, 1e6),
-		accounts: accounts.length ? accounts : ["cash", "bank"]
+		accounts: accounts.length ? accounts : ["cash", "bank"],
+		blips: {
+			car: readBlip(blips.car, DEFAULT_BLIPS.car),
+			boat: readBlip(blips.boat, DEFAULT_BLIPS.boat),
+			air: readBlip(blips.air, DEFAULT_BLIPS.air),
+			impound: readBlip(blips.impound, DEFAULT_BLIPS.impound)
+		}
 	};
 }
 // resource/server/schema.ts
-const garagesSchema = {
+const BLIP = {
+	type: "object",
+	fields: {
+		sprite: {
+			type: "number",
+			min: 0,
+			max: 1e3,
+			integer: !0
+		},
+		color: {
+			type: "number",
+			min: 0,
+			max: 100,
+			integer: !0
+		},
+		scale: {
+			type: "number",
+			min: .3,
+			max: 2
+		}
+	}
+}, garagesSchema = {
 	title: "ADMIN_TITLE",
 	icon: "square-parking",
 	files: {
@@ -1080,7 +1281,21 @@ const garagesSchema = {
 					max: 5,
 					itemMax: 32,
 					pattern: "^[a-z0-9_]{2,32}$"
+				},
+				blips: {
+					type: "object",
+					fields: {
+						car: BLIP,
+						boat: BLIP,
+						air: BLIP,
+						impound: BLIP
+					}
 				}
+			},
+			defaults: {
+				impoundFee: 500,
+				accounts: ["cash", "bank"],
+				blips: DEFAULT_BLIPS
 			}
 		}
 	},
@@ -1202,42 +1417,102 @@ const garagesSchema = {
 				hint: "ADMIN_H_ACCOUNTS",
 				placeholder: "ADMIN_P_ACCOUNTS"
 			}]
+		}, {
+			icon: "map-location-dot",
+			title: "ADMIN_C_BLIPS",
+			desc: "ADMIN_C_BLIPS_DESC",
+			fields: [
+				{
+					widget: "blip",
+					path: "blips.car",
+					label: "ADMIN_O_CAR"
+				},
+				{
+					widget: "blip",
+					path: "blips.boat",
+					label: "ADMIN_O_BOAT"
+				},
+				{
+					widget: "blip",
+					path: "blips.air",
+					label: "ADMIN_O_AIR"
+				},
+				{
+					widget: "blip",
+					path: "blips.impound",
+					label: "ADMIN_F_IMPOUND"
+				}
+			]
 		}]
 	}]
-}, core = resourceExport("ai-core"), vehiclesApi = resourceExport("ai-vehicles"), panel = new AdminPanel(garagesSchema), content = {
-	garages: readGarages(panel.get("garages")),
-	settings: readSettings(panel.get("settings"))
-};
-panel.onChange("garages", () => content.garages = readGarages(panel.get("garages"))), panel.onChange("settings", () => content.settings = readSettings(panel.get("settings"))), aiLogChannels({
+}, core = resourceExport("ai-core"), vehiclesApi = resourceExport("ai-vehicles"), panel = new AdminPanel(garagesSchema), garages = panel.view("garages", readGarages), settings = panel.view("settings", readSettings);
+aiLogChannels({
 	garage: { active: !1 },
 	impound: {}
 });
-const fail = (error) => ({
-	ok: !1,
-	error
-});
-function inGarage(source, garage, slack = 2) {
-	let [x = 0, y = 0, z = 0] = GetEntityCoords(GetPlayerPed(String(source)));
-	return Math.hypot(x - garage.x, y - garage.y) <= garage.radius + slack && Math.abs(z - garage.z) < 10;
+const propsBag = new EntityState(VEHICLE_BAGS.props, (v) => toVehicleProps(v) ?? void 0);
+function inArea(point, garage, slack) {
+	return Math.hypot(point.x - garage.x, point.y - garage.y) <= garage.radius + slack && Math.abs(point.z - garage.z) < 10;
 }
+const inGarage = (source, garage, slack = 2) => inArea(entityCoords(GetPlayerPed(String(source))), garage, slack);
 function ownersAt(source, garage) {
-	let character = core.GetCharacter(source);
+	let character = online.character(source);
 	return character ? garage.jobs.length === 0 ? [{
 		type: "character",
 		id: String(character.id)
-	}] : (core.GetJobs(source) ?? []).filter((m) => garage.jobs.includes(m.job)).map((m) => ({
+	}] : online.jobs(source).filter((job) => garage.jobs.includes(job)).map((job) => ({
 		type: "job",
-		id: m.job
+		id: job
 	})) : [];
 }
 function available(source, garage) {
 	return ownersAt(source, garage).flatMap((owner) => vehiclesApi.GetVehicles(owner)).filter((v) => garage.impound ? v.state === "impound" : v.state === "garage" && (v.garage === garage.id || garage.jobs.length > 0 && v.garage === null));
 }
 const mayUse = (source, garage, vehicle) => ownersAt(source, garage).some((o) => o.type === vehicle.owner.type && o.id === vehicle.owner.id);
-onClientCallback(EVENTS.list, { args: ([id]) => typeof id == "string" ? [id] : null }, (source, garageId) => {
-	let garage = content.garages.get(garageId);
+function parkableBy(source, vehicle) {
+	let ped = GetPlayerPed(String(source)), driver = GetPedInVehicleSeat(vehicle, -1);
+	for (let seat = 0; seat < 15; seat++) {
+		let rider = GetPedInVehicleSeat(vehicle, seat);
+		if (rider && rider !== ped) return !1;
+	}
+	return driver === ped || !driver && isNear(source, entityCoords(vehicle), 6);
+}
+function parkedProps(client, vehicle, entity) {
+	let health = {
+		plate: vehicle.plate,
+		model: GetEntityModel(entity),
+		dirt: Math.min(15, Math.max(0, client.dirt)),
+		engineHealth: GetVehicleEngineHealth(entity),
+		bodyHealth: GetVehicleBodyHealth(entity)
+	}, known = propsBag.get(entity) ?? toVehicleProps(vehicle.props);
+	return known ? {
+		...known,
+		...health
+	} : {
+		...client,
+		...health,
+		mods: {},
+		neon: [
+			!1,
+			!1,
+			!1,
+			!1
+		]
+	};
+}
+onClientCallback(EVENTS.list, {
+	args: ([id]) => {
+		let garageId = readText(id, 64);
+		return garageId === null ? null : [garageId];
+	},
+	rate: {
+		count: 2,
+		windowMs: 2e3
+	}
+}, (source, garageId) => {
+	let garage = garages.value.get(garageId);
 	if (!garage || !inGarage(source, garage)) return fail("GARAGE_ERR_FAR");
-	let fee = garage.impound ? content.settings.impoundFee : 0;
+	let fee = garage.impound ? settings.value.impoundFee : 0;
 	return {
 		ok: !0,
 		garage: {
@@ -1255,26 +1530,30 @@ onClientCallback(EVENTS.list, { args: ([id]) => typeof id == "string" ? [id] : n
 			fee
 		}))
 	};
-}), onClientCallback(EVENTS.takeOut, {
-	args: ([garageId, vehicleId]) => typeof garageId == "string" && typeof vehicleId == "number" ? [garageId, vehicleId] : null,
+});
+function chargeFee(source, fee) {
+	return settings.value.accounts.find((a) => core.RemoveMoney(source, a, fee, "impound")) ?? null;
+}
+onClientCallback(EVENTS.takeOut, {
+	args: ([garageId, vehicleId]) => {
+		let garage = readText(garageId, 64), id = readId(vehicleId);
+		return garage === null || id === null ? null : [garage, id];
+	},
 	lock: !0
 }, async (source, garageId, vehicleId) => {
-	let garage = content.garages.get(garageId), vehicle = vehiclesApi.GetVehicle(vehicleId);
+	let garage = garages.value.get(garageId), vehicle = vehiclesApi.GetVehicle(vehicleId);
 	if (!garage || !inGarage(source, garage)) return fail("GARAGE_ERR_FAR");
 	if (!vehicle || !mayUse(source, garage, vehicle) || !available(source, garage).some((v) => v.id === vehicleId)) return fail("GARAGE_ERR_GONE");
-	if (garage.impound) {
-		let fee = content.settings.impoundFee;
-		if (fee > 0 && !content.settings.accounts.some((a) => core.RemoveMoney(source, a, fee, "impound"))) return fail("GARAGE_ERR_MONEY");
-		aiLog("impound", `took ${vehicle.plate} out of the impound for $${fee}`, {
-			source,
-			metadata: {
-				plate: vehicle.plate,
-				fee
-			}
-		});
-	}
+	let fee = garage.impound ? settings.value.impoundFee : 0, paidFrom = fee > 0 ? chargeFee(source, fee) : null;
+	if (fee > 0 && paidFrom === null) return fail("GARAGE_ERR_MONEY");
 	let netId = await new Promise((resolve) => vehiclesApi.SpawnVehicle(vehicleId, garage.spawn, source, resolve));
-	return netId === null ? fail("GARAGE_ERR_SPAWN") : (aiLog("garage", `took ${vehicle.plate} out of ${garage.id}`, {
+	return netId === null ? (paidFrom !== null && core.AddMoney(source, paidFrom, fee, "impound refund"), fail("GARAGE_ERR_SPAWN")) : (garage.impound && aiLog("impound", `took ${vehicle.plate} out of the impound for $${fee}`, {
+		source,
+		metadata: {
+			plate: vehicle.plate,
+			fee
+		}
+	}), aiLog("garage", `took ${vehicle.plate} out of ${garage.id}`, {
 		source,
 		metadata: {
 			plate: vehicle.plate,
@@ -1285,18 +1564,24 @@ onClientCallback(EVENTS.list, { args: ([id]) => typeof id == "string" ? [id] : n
 		netId
 	});
 }), onClientCallback(EVENTS.park, {
-	args: ([garageId, netId, props]) => typeof garageId == "string" && typeof netId == "number" ? [
-		garageId,
-		netId,
-		props
-	] : null,
+	args: ([garageId, netId, props]) => {
+		let garage = readText(garageId, 64), id = readId(netId), parsed = toVehicleProps(props);
+		return garage === null || id === null || !parsed ? null : [
+			garage,
+			id,
+			parsed
+		];
+	},
 	lock: !0
 }, (source, garageId, netId, props) => {
-	let garage = content.garages.get(garageId);
+	let garage = garages.value.get(garageId);
 	if (!garage || garage.impound || !inGarage(source, garage, 4)) return fail("GARAGE_ERR_FAR");
-	let entity = NetworkGetEntityFromNetworkId(netId), id = entity && DoesEntityExist(entity) ? vehiclesApi.GetVehicleIdByEntity(entity) : null, vehicle = id === null ? null : vehiclesApi.GetVehicle(id);
+	let entity = vehicleFromNet(netId);
+	if (!entity || !inArea(entityCoords(entity), garage, 4)) return fail("GARAGE_ERR_FAR");
+	if (!parkableBy(source, entity)) return fail("GARAGE_ERR_OCCUPIED");
+	let id = vehiclesApi.GetVehicleIdByEntity(entity), vehicle = id === null ? null : vehiclesApi.GetVehicle(id);
 	return !vehicle || id === null ? fail("GARAGE_ERR_NOT_OWNED") : mayUse(source, garage, vehicle) ? (vehiclesApi.SaveVehicle(id, {
-		props,
+		props: parkedProps(props, vehicle, entity),
 		engine: GetVehicleEngineHealth(entity),
 		body: GetVehicleBodyHealth(entity)
 	}), vehiclesApi.StoreVehicle(id, garage.id, "garage"), aiLog("garage", `parked ${vehicle.plate} in ${garage.id}`, {
