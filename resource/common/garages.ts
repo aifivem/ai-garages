@@ -6,7 +6,7 @@ import {
   str,
   vec4,
   type Vec4,
-} from "@aicore-fivem/lib/shared"
+} from "@aicore-fivem/lib/shared";
 
 /** ai-garages' contracts and panel content. No natives. */
 
@@ -17,56 +17,56 @@ export const EVENTS = {
   takeOut: "ai-garages:takeOut",
   /** Callback: (garageId, netId, props) -> { ok } park the vehicle the player drives. */
   park: "ai-garages:park",
-} as const
+} as const;
 
-export type GarageType = "car" | "boat" | "air"
+export type GarageType = "car" | "boat" | "air";
 
 export interface Garage {
-  id: string
-  label: string
-  type: GarageType
-  x: number
-  y: number
-  z: number
-  radius: number
-  spawn: Vec4
+  id: string;
+  label: string;
+  type: GarageType;
+  x: number;
+  y: number;
+  z: number;
+  radius: number;
+  spawn: Vec4;
   /** Empty: a public garage for owned vehicles. Otherwise the fleet of these jobs. */
-  jobs: string[]
+  jobs: string[];
   /** Lists vehicles waiting at the impound instead (fee to take out). */
-  impound: boolean
-  blip: boolean
+  impound: boolean;
+  blip: boolean;
 }
 
 export interface Settings {
-  impoundFee: number
-  accounts: string[]
+  impoundFee: number;
+  accounts: string[];
 }
 
 /** One row of the garage screen. */
 export interface GarageVehicle {
-  id: number
-  plate: string
-  model: string
-  fuel: number
-  engine: number
-  body: number
+  id: number;
+  plate: string;
+  model: string;
+  fuel: number;
+  engine: number;
+  body: number;
   /** Fee to take it out (impound), 0 otherwise. */
-  fee: number
+  fee: number;
 }
 
 export interface GarageList {
-  ok: true
-  garage: { id: string; label: string; impound: boolean }
-  vehicles: GarageVehicle[]
+  ok: true;
+  garage: { id: string; label: string; impound: boolean };
+  vehicles: GarageVehicle[];
 }
 
-const TYPES: GarageType[] = ["car", "boat", "air"]
+const TYPES: GarageType[] = ["car", "boat", "air"];
 
 export function readGarages(raw: unknown): Map<string, Garage> {
-  const out = new Map<string, Garage>()
+  const out = new Map<string, Garage>();
   for (const [id, value] of Object.entries(record(raw))) {
-    const v = record(value)
-    const c = record(v.coords)
+    const v = record(value);
+    const c = record(v.coords);
     out.set(id, {
       id,
       label: str(v.label, id, 48),
@@ -88,36 +88,36 @@ export function readGarages(raw: unknown): Map<string, Garage> {
         : [],
       impound: bool(v.impound, false),
       blip: bool(v.blip, true),
-    })
+    });
   }
-  return out
+  return out;
 }
 
 export function readSettings(raw: unknown): Settings {
-  const s = record(raw)
+  const s = record(raw);
   const accounts = Array.isArray(s.accounts)
     ? s.accounts.filter((a): a is string => typeof a === "string")
-    : []
+    : [];
   return {
     impoundFee: int(s.impoundFee, 500, 0, 1_000_000),
     accounts: accounts.length ? accounts : ["cash", "bank"],
-  }
+  };
 }
 
 /** The server's list answer, checked (msgpack may turn values into null). */
 export function toGarageList(v: unknown): GarageList | null {
-  const r = record(v)
-  const g = record(r.garage)
+  const r = record(v);
+  const g = record(r.garage);
   if (r.ok !== true || typeof g.id !== "string" || !Array.isArray(r.vehicles))
-    return null
+    return null;
   const vehicles = r.vehicles.flatMap((row): GarageVehicle[] => {
-    const x = record(row)
+    const x = record(row);
     if (
       typeof x.id !== "number" ||
       typeof x.plate !== "string" ||
       typeof x.model !== "string"
     )
-      return []
+      return [];
     return [
       {
         id: x.id,
@@ -128,8 +128,8 @@ export function toGarageList(v: unknown): GarageList | null {
         body: num(x.body, 1000),
         fee: num(x.fee, 0),
       },
-    ]
-  })
+    ];
+  });
   return {
     ok: true,
     garage: {
@@ -138,17 +138,17 @@ export function toGarageList(v: unknown): GarageList | null {
       impound: g.impound === true,
     },
     vehicles,
-  }
+  };
 }
 
 /** Client -> NUI messages. */
 export type NuiMessage =
   | {
-      action: "open"
+      action: "open";
       data: {
-        texts: Record<string, string>
-        list: GarageList
-        labels: Record<string, string>
-      }
+        texts: Record<string, string>;
+        list: GarageList;
+        labels: Record<string, string>;
+      };
     }
-  | { action: "close"; data: null }
+  | { action: "close"; data: null };

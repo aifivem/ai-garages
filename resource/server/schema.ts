@@ -1,4 +1,4 @@
-import type { PanelSchema } from "@aicore-fivem/shared"
+import type { PanelSchema } from "@aicore-fivem/shared";
 
 /** ai-garages' panel: garages, job garages, impound lots and the impound fee. */
 export const garagesSchema: PanelSchema = {
@@ -163,4 +163,4 @@ export const garagesSchema: PanelSchema = {
       ],
     },
   ],
-}
+};

@@ -1,8 +1,8 @@
-import en from "../../../locales/en.json"
+import en from "../../../locales/en.json";
 
 /** Browser preview only (`bun run webdev`): `?impound=1` shows the impound lot. */
 const impound =
-  new URLSearchParams(window.location.search).get("impound") !== null
+  new URLSearchParams(window.location.search).get("impound") !== null;
 
 export const MOCK_OPEN = {
   texts: en,
@@ -78,4 +78,4 @@ export const MOCK_OPEN = {
       },
     ],
   },
-}
+};

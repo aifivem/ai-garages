@@ -1,4 +1,4 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCarBurst,
   faCarSide,
@@ -6,22 +6,22 @@ import {
   faKey,
   faWrench,
   type IconDefinition,
-} from "@fortawesome/free-solid-svg-icons"
-import type { GarageVehicle } from "../../../resource/common/garages"
-import { Button } from "../components/ui/button"
-import { useLang } from "../lib/lang"
-import { cn } from "../lib/utils"
+} from "@fortawesome/free-solid-svg-icons";
+import type { GarageVehicle } from "../../../resource/common/garages";
+import { Button } from "../components/ui/button";
+import { useLang } from "../lib/lang";
+import { cn } from "../lib/utils";
 
 const STAT_COLOR = {
   engine: "text-text-2",
   body: "text-warn",
   fuel: "text-tgi-green",
-} as const
+} as const;
 const BAR_COLOR = {
   engine: "bg-text-2",
   body: "bg-warn",
   fuel: "bg-tgi-green",
-} as const
+} as const;
 
 function StatBar({
   kind,
@@ -29,12 +29,12 @@ function StatBar({
   label,
   percent,
 }: {
-  kind: keyof typeof STAT_COLOR
-  icon: IconDefinition
-  label: string
-  percent: number
+  kind: keyof typeof STAT_COLOR;
+  icon: IconDefinition;
+  label: string;
+  percent: number;
 }) {
-  const value = Math.max(0, Math.min(100, Math.floor(percent)))
+  const value = Math.max(0, Math.min(100, Math.floor(percent)));
   return (
     <div className="flex min-w-0 flex-col gap-[0.7vh] rounded-[0.8vh] bg-white/3 px-[1.2vh] py-[1vh]">
       <div className="flex items-center gap-[0.8vh]">
@@ -56,17 +56,17 @@ function StatBar({
         />
       </div>
     </div>
-  )
+  );
 }
 
 interface Props {
-  vehicle: GarageVehicle
-  label: string
-  impound: boolean
-  open: boolean
-  busy: boolean
-  onToggle: () => void
-  onTake: () => void
+  vehicle: GarageVehicle;
+  label: string;
+  impound: boolean;
+  open: boolean;
+  busy: boolean;
+  onToggle: () => void;
+  onTake: () => void;
 }
 
 /** One vehicle (tgiann-realparking row): name and green plate, opens to its condition and the take out button. */
@@ -79,12 +79,12 @@ export function VehicleRow({
   onToggle,
   onTake,
 }: Props) {
-  const t = useLang()
+  const t = useLang();
   return (
     <div
       className={cn(
         "rounded-[1vh] border bg-white/2 transition-colors duration-150",
-        open ? "border-tgi-green" : "border-white/10 hover:border-tgi-green"
+        open ? "border-tgi-green" : "border-white/10 hover:border-tgi-green",
       )}
     >
       <button
@@ -98,7 +98,7 @@ export function VehicleRow({
             icon={faCarSide}
             className={cn(
               "text-[1.4vh]",
-              open ? "text-tgi-green" : "text-text-4"
+              open ? "text-tgi-green" : "text-text-4",
             )}
           />
           <span className="truncate text-[1.5vh] text-white">{label}</span>
@@ -156,5 +156,5 @@ export function VehicleRow({
         </div>
       )}
     </div>
-  )
+  );
 }
