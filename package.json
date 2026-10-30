@@ -5,7 +5,7 @@
   "description": "Garages: park, take out, job fleets and the impound lot",
   "license": "GPL-3.0-only",
   "author": {
-    "name": "ai-core"
+    "name": "TGIANN"
   },
   "repository": "github:TGIANN/ai-garages",
   "type": "module",
