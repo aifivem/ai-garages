@@ -1,12 +1,4 @@
-import {
-  bool,
-  int,
-  num,
-  record,
-  str,
-  vec4,
-  type Vec4,
-} from "@aicore-fivem/lib/shared";
+import { bool, int, num, record, str, vec4, type Vec4, readPlacePed, type PlacePed } from "@aicore-fivem/lib/shared";
 
 /** ai-garages' contracts and panel content. No natives. */
 
@@ -22,6 +14,8 @@ export const EVENTS = {
 export type GarageType = "car" | "boat" | "air";
 
 export interface Garage {
+  /** NPC standing at the place (panel), null for none. */
+  ped: PlacePed | null;
   id: string;
   label: string;
   type: GarageType;
@@ -68,6 +62,7 @@ export function readGarages(raw: unknown): Map<string, Garage> {
     const v = record(value);
     const c = record(v.coords);
     out.set(id, {
+      ped: readPlacePed(v.ped),
       id,
       label: str(v.label, id, 48),
       type: TYPES.includes(v.type as GarageType)

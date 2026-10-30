@@ -66,6 +66,7 @@ class Garages {
               : undefined,
         });
       this.points.add(`open:${garage.id}`, {
+        ped: garage.ped ?? undefined,
         coords,
         label: Locale(
           garage.impound ? "GARAGE_PROMPT_IMPOUND" : "GARAGE_PROMPT_OPEN",

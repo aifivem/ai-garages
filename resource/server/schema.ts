@@ -1,3 +1,4 @@
+import { PLACE_PED_SPEC, placePedFields } from "@aicore-fivem/lib/shared";
 import type { PanelSchema } from "@aicore-fivem/shared";
 
 /** ai-garages' panel: garages, job garages, impound lots and the impound fee. */
@@ -20,6 +21,7 @@ export const garagesSchema: PanelSchema = {
         blip: true,
       },
       sections: {
+        ped: PLACE_PED_SPEC,
         label: { type: "text", min: 1, max: 48 },
         type: { type: "enum", values: ["car", "boat", "air"] },
         coords: { type: "vec3" },
@@ -125,6 +127,12 @@ export const garagesSchema: PanelSchema = {
             },
             { widget: "switch", path: "blip", label: "ADMIN_F_BLIP" },
           ],
+        },
+        {
+          icon: "user",
+          title: "ADMIN_C_PED",
+          desc: "ADMIN_C_PED_DESC",
+          fields: placePedFields(),
         },
       ],
     },
