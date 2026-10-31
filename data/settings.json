@@ -17,13 +17,13 @@
       "scale": 0.6
     },
     "air": {
-      "sprite": 359,
+      "sprite": 360,
       "color": 3,
       "scale": 0.6
     },
     "impound": {
       "sprite": 68,
-      "color": 1,
+      "color": 3,
       "scale": 0.6
     }
   }

@@ -1370,13 +1370,13 @@ const EVENTS = {
 		scale: .6
 	},
 	air: {
-		sprite: 359,
+		sprite: 360,
 		color: 3,
 		scale: .6
 	},
 	impound: {
 		sprite: 68,
-		color: 1,
+		color: 3,
 		scale: .6
 	}
 }, readBlip = (v, d) => readBlipStyle(record(v), {

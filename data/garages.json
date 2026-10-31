@@ -1,57 +1,342 @@
 {
   "$schema": "./schemas/garages.schema.json",
-  "legion": {
-    "label": "Legion Square Parking",
+  "pillbox": {
+    "label": "Motel Parking",
     "type": "car",
     "coords": {
-      "x": 215.8,
-      "y": -810.1,
-      "z": 30.73
+      "x": 274.29,
+      "y": -334.15,
+      "z": 44.92
     },
-    "radius": 18,
+    "radius": 10,
     "spawn": {
-      "x": 229.7,
-      "y": -800.1,
-      "z": 30.57,
-      "heading": 158
+      "x": 265.96,
+      "y": -332.3,
+      "z": 44.51,
+      "heading": 250.68
     },
     "jobs": [],
     "impound": false,
     "blip": true
   },
-  "pillbox": {
-    "label": "Pillbox Parking",
+  "casinogarage": {
+    "label": "Casino Parking",
     "type": "car",
     "coords": {
-      "x": 276.6,
-      "y": -344.7,
-      "z": 44.92
+      "x": 883.96,
+      "y": -4.71,
+      "z": 78.76
     },
-    "radius": 16,
+    "radius": 10,
     "spawn": {
-      "x": 285,
-      "y": -338.6,
-      "z": 44.92,
-      "heading": 160
+      "x": 895.39,
+      "y": -4.75,
+      "z": 78.35,
+      "heading": 146.85
     },
     "jobs": [],
     "impound": false,
+    "blip": true
+  },
+  "sapcounsel": {
+    "label": "San Andreas Parking",
+    "type": "car",
+    "coords": {
+      "x": -330.01,
+      "y": -780.33,
+      "z": 33.96
+    },
+    "radius": 10,
+    "spawn": {
+      "x": -341.57,
+      "y": -767.45,
+      "z": 33.56,
+      "heading": 92.61
+    },
+    "jobs": [],
+    "impound": false,
+    "blip": true
+  },
+  "spanishave": {
+    "label": "Spanish Ave Parking",
+    "type": "car",
+    "coords": {
+      "x": -1160.86,
+      "y": -741.41,
+      "z": 19.63
+    },
+    "radius": 10,
+    "spawn": {
+      "x": -1145.2,
+      "y": -745.42,
+      "z": 19.26,
+      "heading": 108.22
+    },
+    "jobs": [],
+    "impound": false,
+    "blip": true
+  },
+  "caears24": {
+    "label": "Caears 24 Parking",
+    "type": "car",
+    "coords": {
+      "x": 69.84,
+      "y": 12.6,
+      "z": 68.96
+    },
+    "radius": 10,
+    "spawn": {
+      "x": 60.8,
+      "y": 17.54,
+      "z": 68.82,
+      "heading": 339.7
+    },
+    "jobs": [],
+    "impound": false,
+    "blip": true
+  },
+  "caears242": {
+    "label": "Caears 24 Parking",
+    "type": "car",
+    "coords": {
+      "x": -453.7,
+      "y": -786.78,
+      "z": 30.56
+    },
+    "radius": 10,
+    "spawn": {
+      "x": -472.39,
+      "y": -787.71,
+      "z": 30.14,
+      "heading": 180.52
+    },
+    "jobs": [],
+    "impound": false,
+    "blip": true
+  },
+  "lagunapi": {
+    "label": "Laguna Parking",
+    "type": "car",
+    "coords": {
+      "x": 364.37,
+      "y": 297.83,
+      "z": 103.49
+    },
+    "radius": 10,
+    "spawn": {
+      "x": 375.09,
+      "y": 294.66,
+      "z": 102.86,
+      "heading": 164.04
+    },
+    "jobs": [],
+    "impound": false,
+    "blip": true
+  },
+  "airportp": {
+    "label": "Airport Parking",
+    "type": "car",
+    "coords": {
+      "x": -773.12,
+      "y": -2033.04,
+      "z": 8.88
+    },
+    "radius": 10,
+    "spawn": {
+      "x": -779.77,
+      "y": -2040.18,
+      "z": 8.47,
+      "heading": 315.34
+    },
+    "jobs": [],
+    "impound": false,
+    "blip": true
+  },
+  "beachp": {
+    "label": "Beach Parking",
+    "type": "car",
+    "coords": {
+      "x": -1185.32,
+      "y": -1500.64,
+      "z": 4.38
+    },
+    "radius": 10,
+    "spawn": {
+      "x": -1188.14,
+      "y": -1487.95,
+      "z": 3.97,
+      "heading": 124.06
+    },
+    "jobs": [],
+    "impound": false,
+    "blip": true
+  },
+  "themotorhotel": {
+    "label": "The Motor Hotel Parking",
+    "type": "car",
+    "coords": {
+      "x": 1137.77,
+      "y": 2663.54,
+      "z": 37.9
+    },
+    "radius": 10,
+    "spawn": {
+      "x": 1127.7,
+      "y": 2647.84,
+      "z": 37.58,
+      "heading": 1.41
+    },
+    "jobs": [],
+    "impound": false,
+    "blip": true
+  },
+  "liqourparking": {
+    "label": "Liqour Parking",
+    "type": "car",
+    "coords": {
+      "x": 883.99,
+      "y": 3649.67,
+      "z": 32.87
+    },
+    "radius": 10,
+    "spawn": {
+      "x": 898.38,
+      "y": 3649.41,
+      "z": 32.36,
+      "heading": 90.75
+    },
+    "jobs": [],
+    "impound": false,
+    "blip": true
+  },
+  "shoreparking": {
+    "label": "Shore Parking",
+    "type": "car",
+    "coords": {
+      "x": 1737.03,
+      "y": 3718.88,
+      "z": 34.05
+    },
+    "radius": 10,
+    "spawn": {
+      "x": 1725.4,
+      "y": 3716.78,
+      "z": 34.15,
+      "heading": 20.54
+    },
+    "jobs": [],
+    "impound": false,
+    "blip": true
+  },
+  "haanparking": {
+    "label": "Bell Farms Parking",
+    "type": "car",
+    "coords": {
+      "x": 76.88,
+      "y": 6397.3,
+      "z": 31.23
+    },
+    "radius": 10,
+    "spawn": {
+      "x": 62.15,
+      "y": 6403.41,
+      "z": 30.81,
+      "heading": 211.38
+    },
+    "jobs": [],
+    "impound": false,
+    "blip": true
+  },
+  "dumbogarage": {
+    "label": "Dumbo Private Parking",
+    "type": "car",
+    "coords": {
+      "x": 165.75,
+      "y": -3227.2,
+      "z": 5.89
+    },
+    "radius": 10,
+    "spawn": {
+      "x": 168.34,
+      "y": -3236.1,
+      "z": 5.43,
+      "heading": 272.05
+    },
+    "jobs": [],
+    "impound": false,
+    "blip": true
+  },
+  "legion": {
+    "label": "Pillbox Garage Parking",
+    "type": "car",
+    "coords": {
+      "x": 213.2,
+      "y": -796.05,
+      "z": 30.86
+    },
+    "radius": 10,
+    "spawn": {
+      "x": 222.02,
+      "y": -804.19,
+      "z": 30.26,
+      "heading": 248.19
+    },
+    "jobs": [],
+    "impound": false,
+    "blip": true
+  },
+  "grapeseedgarage": {
+    "label": "Grapeseed Parking",
+    "type": "car",
+    "coords": {
+      "x": 2552.68,
+      "y": 4671.8,
+      "z": 33.95
+    },
+    "radius": 10,
+    "spawn": {
+      "x": 2550.17,
+      "y": 4681.96,
+      "z": 33.81,
+      "heading": 17.05
+    },
+    "jobs": [],
+    "impound": false,
+    "blip": true
+  },
+  "impound": {
+    "label": "Depot Lot",
+    "type": "car",
+    "coords": {
+      "x": 401.76,
+      "y": -1632.57,
+      "z": 29.29
+    },
+    "radius": 10,
+    "spawn": {
+      "x": 396.55,
+      "y": -1643.93,
+      "z": 28.88,
+      "heading": 321.91
+    },
+    "jobs": [],
+    "impound": true,
     "blip": true
   },
   "mrpd": {
-    "label": "Mission Row Police Garage",
+    "label": "Police",
     "type": "car",
     "coords": {
-      "x": 454.6,
-      "y": -1017.4,
-      "z": 28.43
+      "x": 462.83,
+      "y": -1019.52,
+      "z": 28.1
     },
-    "radius": 12,
+    "radius": 10,
     "spawn": {
-      "x": 438.4,
-      "y": -1018.3,
-      "z": 27.7,
-      "heading": 90
+      "x": 446.16,
+      "y": -1025.79,
+      "z": 28.23,
+      "heading": 6.59
     },
     "jobs": [
       "police"
@@ -59,39 +344,286 @@
     "impound": false,
     "blip": false
   },
-  "impound": {
-    "label": "Impound Lot",
-    "type": "car",
+  "intairport": {
+    "label": "Airport Hangar",
+    "type": "air",
     "coords": {
-      "x": 409.3,
-      "y": -1623.1,
-      "z": 29.29
+      "x": -979.06,
+      "y": -2995.48,
+      "z": 13.95
     },
     "radius": 10,
     "spawn": {
-      "x": 401.8,
-      "y": -1632.6,
-      "z": 29.29,
-      "heading": 228
+      "x": -998.37,
+      "y": -2985.01,
+      "z": 13.95,
+      "heading": 61.09
+    },
+    "jobs": [],
+    "impound": false,
+    "blip": true
+  },
+  "higginsheli": {
+    "label": "Higgins Helitours",
+    "type": "air",
+    "coords": {
+      "x": -722.15,
+      "y": -1472.79,
+      "z": 5
+    },
+    "radius": 10,
+    "spawn": {
+      "x": -745.22,
+      "y": -1468.72,
+      "z": 5.39,
+      "heading": 319.84
+    },
+    "jobs": [],
+    "impound": false,
+    "blip": true
+  },
+  "airsshores": {
+    "label": "Sandy Shores Hangar",
+    "type": "air",
+    "coords": {
+      "x": 1737.89,
+      "y": 3288.13,
+      "z": 41.14
+    },
+    "radius": 10,
+    "spawn": {
+      "x": 1742.83,
+      "y": 3266.83,
+      "z": 41.24,
+      "heading": 102.64
+    },
+    "jobs": [],
+    "impound": false,
+    "blip": true
+  },
+  "airzancudo": {
+    "label": "Fort Zancudo Hangar",
+    "type": "air",
+    "coords": {
+      "x": -1828.25,
+      "y": 2975.44,
+      "z": 32.81
+    },
+    "radius": 10,
+    "spawn": {
+      "x": -1828.25,
+      "y": 2975.44,
+      "z": 32.81,
+      "heading": 57.24
+    },
+    "jobs": [],
+    "impound": false,
+    "blip": true
+  },
+  "airdepot": {
+    "label": "Air Depot",
+    "type": "air",
+    "coords": {
+      "x": -1270.01,
+      "y": -3377.53,
+      "z": 14.33
+    },
+    "radius": 10,
+    "spawn": {
+      "x": -1270.01,
+      "y": -3377.53,
+      "z": 14.33,
+      "heading": 329.25
     },
     "jobs": [],
     "impound": true,
     "blip": true
   },
   "marina": {
-    "label": "Marina",
+    "label": "LSYMC Boathouse",
     "type": "boat",
     "coords": {
-      "x": -794.7,
-      "y": -1510.8,
-      "z": 1.6
+      "x": -785.95,
+      "y": -1497.84,
+      "z": -0.09
     },
-    "radius": 14,
+    "radius": 10,
     "spawn": {
-      "x": -808.4,
-      "y": -1514.9,
-      "z": 0.1,
-      "heading": 110
+      "x": -796.64,
+      "y": -1502.6,
+      "z": -0.09,
+      "heading": 111.49
+    },
+    "jobs": [],
+    "impound": false,
+    "blip": true
+  },
+  "paleto": {
+    "label": "Paleto Boathouse",
+    "type": "boat",
+    "coords": {
+      "x": -278.21,
+      "y": 6638.13,
+      "z": 7.55
+    },
+    "radius": 10,
+    "spawn": {
+      "x": -289.2,
+      "y": 6637.96,
+      "z": 1.01,
+      "heading": 45.5
+    },
+    "jobs": [],
+    "impound": false,
+    "blip": true
+  },
+  "millars": {
+    "label": "Millars Boathouse",
+    "type": "boat",
+    "coords": {
+      "x": 1298.56,
+      "y": 4212.42,
+      "z": 33.25
+    },
+    "radius": 10,
+    "spawn": {
+      "x": 1297.82,
+      "y": 4209.61,
+      "z": 30.12,
+      "heading": 253.5
+    },
+    "jobs": [],
+    "impound": false,
+    "blip": true
+  },
+  "seadepot": {
+    "label": "LSYMC Depot",
+    "type": "boat",
+    "coords": {
+      "x": -742.95,
+      "y": -1407.58,
+      "z": 5.5
+    },
+    "radius": 10,
+    "spawn": {
+      "x": -729.77,
+      "y": -1355.49,
+      "z": 1.19,
+      "heading": 142.5
+    },
+    "jobs": [],
+    "impound": true,
+    "blip": true
+  },
+  "rigdepot": {
+    "label": "Big Rig Depot",
+    "type": "car",
+    "coords": {
+      "x": 2334.42,
+      "y": 3118.62,
+      "z": 48.2
+    },
+    "radius": 10,
+    "spawn": {
+      "x": 2324.57,
+      "y": 3117.79,
+      "z": 48.21,
+      "heading": 4.05
+    },
+    "jobs": [],
+    "impound": true,
+    "blip": true
+  },
+  "dumborigparking": {
+    "label": "Dumbo Big Rig Parking",
+    "type": "car",
+    "coords": {
+      "x": 161.23,
+      "y": -3188.73,
+      "z": 5.97
+    },
+    "radius": 10,
+    "spawn": {
+      "x": 167,
+      "y": -3203.89,
+      "z": 5.94,
+      "heading": 271.27
+    },
+    "jobs": [],
+    "impound": false,
+    "blip": true
+  },
+  "popsrigparking": {
+    "label": "Pop's Big Rig Parking",
+    "type": "car",
+    "coords": {
+      "x": 137.67,
+      "y": 6632.99,
+      "z": 31.67
+    },
+    "radius": 10,
+    "spawn": {
+      "x": 127.69,
+      "y": 6605.84,
+      "z": 31.93,
+      "heading": 223.67
+    },
+    "jobs": [],
+    "impound": false,
+    "blip": true
+  },
+  "ronsrigparking": {
+    "label": "Ron's Big Rig Parking",
+    "type": "car",
+    "coords": {
+      "x": -2529.37,
+      "y": 2342.67,
+      "z": 33.06
+    },
+    "radius": 10,
+    "spawn": {
+      "x": -2521.61,
+      "y": 2326.45,
+      "z": 33.13,
+      "heading": 88.7
+    },
+    "jobs": [],
+    "impound": false,
+    "blip": true
+  },
+  "ronsrigparking2": {
+    "label": "Ron's Big Rig Parking",
+    "type": "car",
+    "coords": {
+      "x": 2561.67,
+      "y": 476.68,
+      "z": 108.49
+    },
+    "radius": 10,
+    "spawn": {
+      "x": 2561.67,
+      "y": 476.68,
+      "z": 108.49,
+      "heading": 177.86
+    },
+    "jobs": [],
+    "impound": false,
+    "blip": true
+  },
+  "ronsrigparking3": {
+    "label": "Ron's Big Rig Parking",
+    "type": "car",
+    "coords": {
+      "x": -41.24,
+      "y": -2550.63,
+      "z": 6.01
+    },
+    "radius": 10,
+    "spawn": {
+      "x": -39.39,
+      "y": -2527.81,
+      "z": 6.08,
+      "heading": 326.18
     },
     "jobs": [],
     "impound": false,

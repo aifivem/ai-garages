@@ -7,7 +7,7 @@
   "author": {
     "name": "TGIANN"
   },
-  "repository": "github:TGIANN/ai-garages",
+  "repository": "github:aifivem/ai-garages",
   "type": "module",
   "fxDependencies": [
     "/onesync",

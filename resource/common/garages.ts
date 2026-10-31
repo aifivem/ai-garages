@@ -58,8 +58,8 @@ export interface Settings {
 export const DEFAULT_BLIPS: Settings["blips"] = {
   car: { sprite: 357, color: 3, scale: 0.6 },
   boat: { sprite: 356, color: 3, scale: 0.6 },
-  air: { sprite: 359, color: 3, scale: 0.6 },
-  impound: { sprite: 68, color: 1, scale: 0.6 },
+  air: { sprite: 360, color: 3, scale: 0.6 },
+  impound: { sprite: 68, color: 3, scale: 0.6 },
 };
 
 const readBlip = (v: unknown, d: BlipStyle): BlipStyle => {
