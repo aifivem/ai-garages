@@ -28,6 +28,10 @@ import {
   type Garage,
   type NuiMessage,
 } from "common/garages";
+import { NUI_LAYER } from "@aicore-fivem/shared";
+
+// Stacking among NUI pages (`NUI_LAYER`): set at start, not left to load order.
+SetNuiZindex(NUI_LAYER.screen);
 
 const world = new AdminWorld(["garages", "settings"]);
 const settings = world.view("settings", readSettings);
