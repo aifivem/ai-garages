@@ -344,6 +344,94 @@
     "impound": false,
     "blip": false
   },
+  "ballas": {
+    "label": "Ballas",
+    "type": "car",
+    "coords": {
+      "x": 87.51,
+      "y": -1969.1,
+      "z": 20.75
+    },
+    "radius": 10,
+    "spawn": {
+      "x": 93.78,
+      "y": -1961.73,
+      "z": 20.34,
+      "heading": 319.11
+    },
+    "jobs": [],
+    "gangs": [
+      "ballas"
+    ],
+    "impound": false,
+    "blip": false
+  },
+  "families": {
+    "label": "Families",
+    "type": "car",
+    "coords": {
+      "x": -23.89,
+      "y": -1436.03,
+      "z": 30.65
+    },
+    "radius": 10,
+    "spawn": {
+      "x": -25.47,
+      "y": -1445.76,
+      "z": 30.24,
+      "heading": 178.5
+    },
+    "jobs": [],
+    "gangs": [
+      "families"
+    ],
+    "impound": false,
+    "blip": false
+  },
+  "lostmc": {
+    "label": "Lost MC",
+    "type": "car",
+    "coords": {
+      "x": 985.83,
+      "y": -138.14,
+      "z": 73.09
+    },
+    "radius": 10,
+    "spawn": {
+      "x": 977.65,
+      "y": -133.02,
+      "z": 73.34,
+      "heading": 59.39
+    },
+    "jobs": [],
+    "gangs": [
+      "lostmc"
+    ],
+    "impound": false,
+    "blip": false
+  },
+  "cartel": {
+    "label": "Cartel",
+    "type": "car",
+    "coords": {
+      "x": 1411.67,
+      "y": 1117.8,
+      "z": 114.84
+    },
+    "radius": 10,
+    "spawn": {
+      "x": 1403.01,
+      "y": 1118.25,
+      "z": 114.84,
+      "heading": 88.69
+    },
+    "jobs": [],
+    "gangs": [
+      "cartel"
+    ],
+    "impound": false,
+    "blip": false
+  },
   "intairport": {
     "label": "Airport Hangar",
     "type": "air",

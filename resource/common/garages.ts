@@ -1,8 +1,10 @@
 import {
+  type AccessRule,
   bool,
   int,
   num,
   type PlacePed,
+  readAccess,
   readBlipStyle,
   readPlacePed,
   record,
@@ -35,8 +37,8 @@ export interface Garage {
   z: number;
   radius: number;
   spawn: Vec4;
-  /** Empty: a public garage for owned vehicles. Otherwise the fleet of these jobs. */
-  jobs: string[];
+  /** Public (no jobs, no gangs): owned vehicles. Otherwise the fleet of the listed jobs and gangs the player passes. */
+  access: AccessRule;
   /** Lists vehicles waiting at the impound instead (fee to take out). */
   impound: boolean;
   blip: boolean;
@@ -87,36 +89,28 @@ export interface GarageList {
 
 const TYPES: GarageType[] = ["car", "boat", "air"];
 
-export function readGarages(raw: unknown): Map<string, Garage> {
-  const out = new Map<string, Garage>();
-  for (const [id, value] of Object.entries(record(raw))) {
-    const v = record(value);
-    const c = record(v.coords);
-    out.set(id, {
-      ped: readPlacePed(v.ped),
-      id,
-      label: str(v.label, id, 48),
-      type: TYPES.includes(v.type as GarageType)
-        ? (v.type as GarageType)
-        : "car",
+/** One garage record (`panel.records` / `world.records`). */
+export function readGarage(id: string, v: Record<string, unknown>): Garage {
+  const c = record(v.coords);
+  return {
+    ped: readPlacePed(v.ped),
+    id,
+    label: str(v.label, id, 48),
+    type: TYPES.includes(v.type as GarageType) ? (v.type as GarageType) : "car",
+    x: num(c.x, 0),
+    y: num(c.y, 0),
+    z: num(c.z, 0),
+    radius: num(v.radius, 12, 2, 50),
+    spawn: vec4(v.spawn, {
       x: num(c.x, 0),
       y: num(c.y, 0),
       z: num(c.z, 0),
-      radius: num(v.radius, 12, 2, 50),
-      spawn: vec4(v.spawn, {
-        x: num(c.x, 0),
-        y: num(c.y, 0),
-        z: num(c.z, 0),
-        heading: 0,
-      }),
-      jobs: Array.isArray(v.jobs)
-        ? v.jobs.filter((j): j is string => typeof j === "string")
-        : [],
-      impound: bool(v.impound, false),
-      blip: bool(v.blip, true),
-    });
-  }
-  return out;
+      heading: 0,
+    }),
+    access: readAccess(v),
+    impound: bool(v.impound, false),
+    blip: bool(v.blip, true),
+  };
 }
 
 export function readSettings(raw: unknown): Settings {

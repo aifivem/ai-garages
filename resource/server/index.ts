@@ -12,6 +12,7 @@ import {
 } from "@aicore-fivem/lib/server";
 import {
   fail,
+  isPublic,
   readId,
   readText,
   toVehicleProps,
@@ -24,7 +25,7 @@ import {
 } from "@aicore-fivem/shared";
 import {
   EVENTS,
-  readGarages,
+  readGarage,
   readSettings,
   type Garage,
   type GarageList,
@@ -34,7 +35,7 @@ import { garagesSchema } from "./schema";
 const core = resourceExport("ai-core");
 const vehiclesApi = resourceExport("ai-vehicles");
 const panel = new AdminPanel(garagesSchema);
-const garages = panel.view("garages", readGarages);
+const garages = panel.records("garages", readGarage);
 const settings = panel.view("settings", readSettings);
 aiLogChannels({ garage: { active: false }, impound: {} });
 
@@ -58,16 +59,26 @@ function inArea(
 const inGarage = (source: number, garage: Garage, slack = 2): boolean =>
   inArea(entityCoords(GetPlayerPed(String(source))), garage, slack);
 
-/** Owners whose vehicles the player may use at this garage: the character, or the garage's jobs the player has. */
+/**
+ * Owners whose vehicles the player may use at this garage: the character (public garage), or each of the garage's
+ * jobs and gangs the player passes the access rule for (grade, duty) on its own.
+ */
 function ownersAt(source: number, garage: Garage): VehicleOwner[] {
   const character = online.character(source);
   if (!character) return [];
-  if (garage.jobs.length === 0)
-    return [{ type: "character", id: String(character.id) }];
-  return online
-    .jobs(source)
-    .filter((job) => garage.jobs.includes(job))
-    .map((job) => ({ type: "job", id: job }));
+  const rule = garage.access;
+  if (isPublic(rule)) return [{ type: "character", id: String(character.id) }];
+  const owners: VehicleOwner[] = [];
+  for (const job of rule.jobs)
+    if (online.allows(source, { ...rule, jobs: [job], gangs: [] }))
+      owners.push({ type: "job", id: job });
+  for (const gang of rule.gangs)
+    if (online.allows(source, { ...rule, jobs: [], gangs: [gang] }))
+      owners.push({ type: "gang", id: gang });
+  // A gang garage also stores its members' own cars, as qb-garages does.
+  if (owners.some((o) => o.type === "gang"))
+    owners.push({ type: "character", id: String(character.id) });
+  return owners;
 }
 
 /** What the player can take out here: stored in this garage, or (impound) everything waiting at the impound. */
@@ -80,7 +91,9 @@ function available(source: number, garage: Garage): OwnedVehicle[] {
       ? v.state === "impound"
       : v.state === "garage" &&
         (v.garage === garage.id ||
-          (garage.jobs.length > 0 && v.garage === null)),
+          (!isPublic(garage.access) &&
+            v.garage === null &&
+            v.owner.type !== "character")),
   );
 }
 
@@ -139,7 +152,7 @@ onClientCallback(
     rate: { count: 2, windowMs: 2000 },
   },
   (source, garageId) => {
-    const garage = garages.value.get(garageId);
+    const garage = garages.get(garageId);
     if (!garage || !inGarage(source, garage)) return fail("GARAGE_ERR_FAR");
     const fee = garage.impound ? settings.value.impoundFee : 0;
     const result: GarageList = {
@@ -179,7 +192,7 @@ onClientCallback(
     lock: true,
   },
   async (source, garageId, vehicleId) => {
-    const garage = garages.value.get(garageId);
+    const garage = garages.get(garageId);
     const vehicle = vehiclesApi.GetVehicle(vehicleId);
     if (!garage || !inGarage(source, garage)) return fail("GARAGE_ERR_FAR");
     if (
@@ -226,7 +239,7 @@ onClientCallback(
     lock: true,
   },
   (source, garageId, netId, props) => {
-    const garage = garages.value.get(garageId);
+    const garage = garages.get(garageId);
     if (!garage || garage.impound || !inGarage(source, garage, 4))
       return fail("GARAGE_ERR_FAR");
     const entity = vehicleFromNet(netId);
