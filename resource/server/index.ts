@@ -12,6 +12,7 @@ import {
 } from "@aicore-fivem/lib/server";
 import {
   fail,
+  flatDistance,
   isPublic,
   readId,
   readText,
@@ -52,8 +53,8 @@ function inArea(
   slack: number,
 ): boolean {
   return (
-    Math.hypot(point.x - garage.x, point.y - garage.y) <=
-      garage.radius + slack && Math.abs(point.z - garage.z) < 10
+    flatDistance(point, garage) <= garage.radius + slack &&
+    Math.abs(point.z - garage.z) < 10
   );
 }
 const inGarage = (source: number, garage: Garage, slack = 2): boolean =>

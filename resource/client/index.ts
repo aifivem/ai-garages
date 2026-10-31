@@ -3,6 +3,7 @@ import {
   allows,
   cache,
   callAction,
+  drivenVehicle,
   getVehicleProps,
   loadLocaleTexts,
   notify,
@@ -37,7 +38,7 @@ const page = new NuiScreen<NuiMessage>("garage", {
   onClose: () => garages.forget(),
 });
 
-const driving = (): boolean => cache.vehicle !== false && cache.seat === -1;
+const driving = (): boolean => drivenVehicle() !== false;
 
 /**
  * Garages on this client: two points each (park while driving, open the list on foot; impounds only open), blips,

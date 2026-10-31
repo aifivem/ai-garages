@@ -69,7 +69,7 @@ function readText(value, max) {
 const fail = (error) => ({
 	ok: !1,
 	error
-}), names = (v) => Array.isArray(v) ? v.filter((x) => typeof x == "string") : [];
+}), flatDistance = (a, b) => Math.hypot(a.x - b.x, a.y - b.y), names = (v) => Array.isArray(v) ? v.filter((x) => typeof x == "string") : [];
 function readAccess(value) {
 	let v = record(value), grades = {};
 	for (let [name, grade] of Object.entries(record(v.grades))) typeof grade == "number" && Number.isInteger(grade) && grade >= 0 && (grades[name] = grade);
@@ -449,6 +449,8 @@ const CORE = {
 	vehicleTypeCallback: "ai-core:vehicleType",
 	interactionStateKey: "ai:interaction",
 	pvpStateKey: "ai:pvp",
+	medicalStateKey: "ai:medical",
+	clientDeadEvent: "ai-core:client:dead",
 	charactersCallback: "ai-core:characters",
 	createCharacterCallback: "ai-core:createCharacter",
 	deleteCharacterCallback: "ai-core:deleteCharacter",
@@ -1153,6 +1155,9 @@ var OnlinePlayers = class {
 	character(source) {
 		return this.start(), this.players.get(source)?.character ?? null;
 	}
+	charId(source) {
+		return this.start(), this.players.get(source)?.character.id;
+	}
 	name(source, options = {}) {
 		let c = this.character(source);
 		return c ? `${c.firstname} ${c.lastname}` : options.fallback === !1 ? "" : GetPlayerName(String(source));
@@ -1501,11 +1506,7 @@ const EVENTS = {
 		color: 3,
 		scale: .6
 	}
-}, readBlip = (v, d) => readBlipStyle(record(v), {
-	sprite: d.sprite,
-	color: d.color,
-	scale: d.scale
-}), TYPES = [
+}, TYPES = [
 	"car",
 	"boat",
 	"air"
@@ -1538,10 +1539,10 @@ function readSettings(raw) {
 		impoundFee: int(s.impoundFee, 500, 0, 1e6),
 		accounts: accounts.length ? accounts : ["cash", "bank"],
 		blips: {
-			car: readBlip(blips.car, DEFAULT_BLIPS.car),
-			boat: readBlip(blips.boat, DEFAULT_BLIPS.boat),
-			air: readBlip(blips.air, DEFAULT_BLIPS.air),
-			impound: readBlip(blips.impound, DEFAULT_BLIPS.impound)
+			car: readBlipStyle(blips.car, DEFAULT_BLIPS.car),
+			boat: readBlipStyle(blips.boat, DEFAULT_BLIPS.boat),
+			air: readBlipStyle(blips.air, DEFAULT_BLIPS.air),
+			impound: readBlipStyle(blips.impound, DEFAULT_BLIPS.impound)
 		}
 	};
 }
@@ -1784,7 +1785,7 @@ aiLogChannels({
 });
 const propsBag = new EntityState(VEHICLE_BAGS.props, (v) => toVehicleProps(v) ?? void 0);
 function inArea(point, garage, slack) {
-	return Math.hypot(point.x - garage.x, point.y - garage.y) <= garage.radius + slack && Math.abs(point.z - garage.z) < 10;
+	return flatDistance(point, garage) <= garage.radius + slack && Math.abs(point.z - garage.z) < 10;
 }
 const inGarage = (source, garage, slack = 2) => inArea(entityCoords(GetPlayerPed(String(source))), garage, slack);
 function ownersAt(source, garage) {

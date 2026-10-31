@@ -64,11 +64,6 @@ export const DEFAULT_BLIPS: Settings["blips"] = {
   impound: { sprite: 68, color: 3, scale: 0.6 },
 };
 
-const readBlip = (v: unknown, d: BlipStyle): BlipStyle => {
-  const r = record(v);
-  return readBlipStyle(r, { sprite: d.sprite, color: d.color, scale: d.scale });
-};
-
 /** One row of the garage screen. */
 export interface GarageVehicle {
   id: number;
@@ -123,10 +118,10 @@ export function readSettings(raw: unknown): Settings {
     impoundFee: int(s.impoundFee, 500, 0, 1_000_000),
     accounts: accounts.length ? accounts : ["cash", "bank"],
     blips: {
-      car: readBlip(blips.car, DEFAULT_BLIPS.car),
-      boat: readBlip(blips.boat, DEFAULT_BLIPS.boat),
-      air: readBlip(blips.air, DEFAULT_BLIPS.air),
-      impound: readBlip(blips.impound, DEFAULT_BLIPS.impound),
+      car: readBlipStyle(blips.car, DEFAULT_BLIPS.car),
+      boat: readBlipStyle(blips.boat, DEFAULT_BLIPS.boat),
+      air: readBlipStyle(blips.air, DEFAULT_BLIPS.air),
+      impound: readBlipStyle(blips.impound, DEFAULT_BLIPS.impound),
     },
   };
 }
