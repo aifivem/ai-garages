@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/aifivem/ai-garages/compare/v0.2.0...v0.2.1) (2026-10-31)
+
+
+### Miscellaneous Chores
+
+* rebuild with the current lib ([0d8cbd8](https://github.com/aifivem/ai-garages/commit/0d8cbd8bb4b1cb7c39773b468712e68a128520df))
+
 ## [0.2.0](https://github.com/aifivem/ai-garages/compare/v0.1.0...v0.2.0) (2026-10-31)
 
 
