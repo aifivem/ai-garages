@@ -4,9 +4,9 @@ import {
   callAction,
   getVehicleProps,
   hasJob,
-  hud,
   loadLocaleTexts,
   notify,
+  NuiScreen,
   onCache,
   onMembershipChange,
   Points,
@@ -26,7 +26,10 @@ const world = new AdminWorld(["garages", "settings"]);
 const settings = world.view("settings", readSettings);
 const texts = loadLocaleTexts();
 
-const send = (m: NuiMessage): void => SendNUIMessage(m);
+/** The list page; closing it forgets which garage was open. */
+const page = new NuiScreen<NuiMessage>("garage", {
+  onClose: () => garages.forget(),
+});
 
 const driving = (): boolean => cache.vehicle !== false && cache.seat === -1;
 
@@ -90,15 +93,10 @@ class Garages {
     if (!list) return;
     // Labels are the game's names of the models.
     const labels = Object.fromEntries(
-      list.vehicles.map((v) => [
-        v.model,
-        vehicleLabel(v.model),
-      ]),
+      list.vehicles.map((v) => [v.model, vehicleLabel(v.model)]),
     );
     this.open = id;
-    SetNuiFocus(true, true);
-    hud.hide("garage");
-    send({ action: "open", data: { texts, list, labels } });
+    page.open({ action: "open", data: { texts, list, labels } });
   }
 
   private async park(id: string, vehicle: number): Promise<void> {
@@ -119,16 +117,13 @@ class Garages {
       timeout: 15_000,
     });
     if (!result) return false;
-    this.close();
+    page.close();
     notify(Locale("GARAGE_TAKEN"), "success", 2500);
     return true;
   }
 
-  close(): void {
+  forget(): void {
     this.open = null;
-    SetNuiFocus(false, false);
-    hud.show("garage");
-    send({ action: "close", data: null });
   }
 }
 
@@ -140,12 +135,8 @@ world.onChange("settings", () => garages.rebuild());
 onMembershipChange(() => garages.rebuild());
 onCache("seat", () => garages.points.refresh());
 
-RegisterNuiCallback("takeOut", (data: unknown, cb: (r: unknown) => void) => {
-  const id = isRecord(data) ? readId(data.id) : null;
-  if (id === null) return cb({ ok: false });
-  void garages.takeOut(id).then((ok) => cb({ ok }));
-});
-RegisterNuiCallback("close", (_d: unknown, cb: (r: unknown) => void) => {
-  garages.close();
-  cb({ ok: true });
-});
+page.on(
+  "takeOut",
+  (data) => (isRecord(data) ? readId(data.id) : null),
+  async (id) => ({ ok: await garages.takeOut(id) }),
+);
