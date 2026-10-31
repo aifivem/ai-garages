@@ -14,6 +14,7 @@ Garages from the admin panel: public garages for owned vehicles, job and gang ga
 
 ## Contracts
 
+- Exports for ai-core's garage layer (lib `garages`, never called by scripts directly): `ImpoundVehicle(entity)` and `StoreVehicle(entity, garageId)` (owned ai-vehicles vehicles, condition and fuel saved first; false for anything else), `GetStoredVehicles(source)` (`GaragedVehicle[]` in `@aicore-fivem/shared`). Parking stores the fuel read through lib `fuel` (any fuel script).
 - Callbacks and shapes: `resource/common/garages.ts`. Panel files `data/garages.json`, `data/settings.json` (both `sync: "all"`).
 
 ## Entry points

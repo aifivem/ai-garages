@@ -4,9 +4,11 @@ import {
   aiLogChannels,
   entityCoords,
   EntityState,
+  fuel,
   isNear,
   onClientCallback,
   online,
+  registerExport,
   resourceExport,
   vehicleFromNet,
 } from "@aicore-fivem/lib/server";
@@ -21,6 +23,7 @@ import {
 } from "@aicore-fivem/lib/shared";
 import {
   VEHICLE_BAGS,
+  type GaragedVehicle,
   type OwnedVehicle,
   type VehicleOwner,
 } from "@aicore-fivem/shared";
@@ -143,6 +146,20 @@ function parkedProps(
   return { ...(known ?? client), ...health };
 }
 
+/** The server-read condition stored with a parked vehicle; fuel through ai-core's fuel layer (any fuel script). */
+function condition(entity: number): {
+  engine: number;
+  body: number;
+  fuel?: number;
+} {
+  const level = fuel.get(entity);
+  return {
+    engine: GetVehicleEngineHealth(entity),
+    body: GetVehicleBodyHealth(entity),
+    ...(level !== null ? { fuel: level } : {}),
+  };
+}
+
 onClientCallback(
   EVENTS.list,
   {
@@ -253,8 +270,7 @@ onClientCallback(
     if (!mayUse(source, garage, vehicle)) return fail("GARAGE_ERR_NOT_YOURS");
     vehiclesApi.SaveVehicle(id, {
       props: parkedProps(props, vehicle, entity),
-      engine: GetVehicleEngineHealth(entity),
-      body: GetVehicleBodyHealth(entity),
+      ...condition(entity),
     });
     vehiclesApi.StoreVehicle(id, garage.id, "garage");
     aiLog("garage", `parked ${vehicle.plate} in ${garage.id}`, {
@@ -264,3 +280,40 @@ onClientCallback(
     return { ok: true };
   },
 );
+
+/** An owned vehicle entity's ai-vehicles id, null for any other entity. */
+function ownedId(entity: unknown): number | null {
+  if (typeof entity !== "number" || !DoesEntityExist(entity)) return null;
+  return vehiclesApi.GetVehicleIdByEntity(entity);
+}
+
+/** ai-core's garage layer (lib `garages`): impound, store and list through ai-garages. */
+registerExport("ImpoundVehicle", (entity: unknown) => {
+  const id = ownedId(entity);
+  if (id === null) return false;
+  vehiclesApi.SaveVehicle(id, condition(entity as number));
+  vehiclesApi.StoreVehicle(id, null, "impound");
+  return true;
+});
+registerExport("StoreVehicle", (entity: unknown, garageId: unknown) => {
+  const id = ownedId(entity);
+  const garage = typeof garageId === "string" ? garages.get(garageId) : null;
+  if (id === null || !garage || garage.impound) return false;
+  vehiclesApi.SaveVehicle(id, condition(entity as number));
+  vehiclesApi.StoreVehicle(id, garage.id, "garage");
+  return true;
+});
+registerExport("GetStoredVehicles", (source: unknown): GaragedVehicle[] => {
+  const character =
+    typeof source === "number" ? online.character(source) : null;
+  if (!character) return [];
+  return vehiclesApi
+    .GetVehicles({ type: "character", id: String(character.id) })
+    .filter((v) => v.state !== "out")
+    .map((v) => ({
+      plate: v.plate,
+      model: v.model,
+      garage: v.garage,
+      impounded: v.state === "impound",
+    }));
+});
