@@ -7,10 +7,10 @@ import {
   faWrench,
   type IconDefinition,
 } from "@fortawesome/free-solid-svg-icons";
-import type { GarageVehicle } from "../../../resource/common/garages";
-import { Button } from "../components/ui/button";
-import { useLang } from "../lib/lang";
-import { cn } from "../lib/utils";
+import type { GarageVehicle } from "../../../../resource/common/garages";
+import { Button } from "../../components/ui/button";
+import { useLang } from "../../lib/lang";
+import { cn } from "../../lib/utils";
 
 const STAT_COLOR = {
   engine: "text-text-2",

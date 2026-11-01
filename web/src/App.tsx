@@ -7,7 +7,7 @@ import { Button } from "./components/ui/button";
 import { VirtualList } from "./components/VirtualList";
 import { MOCK_OPEN } from "./dev/mock";
 import { setTexts, useLang } from "./lib/lang";
-import { VehicleRow } from "./features/VehicleRow";
+import { VehicleRow } from "./features/garage/VehicleRow";
 
 type OpenData = Extract<NuiMessage, { action: "open" }>["data"];
 const OPEN_MOCK = { mockData: MOCK_OPEN, mockDelay: 100 };

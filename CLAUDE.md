@@ -19,6 +19,6 @@ Garages from the admin panel: public garages for owned vehicles, job and gang ga
 
 ## Entry points
 
-- Server: list, take out, park `resource/server/index.ts`; panel `server/schema.ts`.
-- Client: garage points (lib `RecordObjects` + `Points`, blip on the "open" point; an edited garage rebuilds only its points, a settings change or a membership change rebuilds all / the locked ones), NUI bridge `resource/client/index.ts`.
-- NUI (tgiann-realparking look): `web/src/App.tsx`, rows `web/src/features/VehicleRow.tsx`; browser preview `bun run webdev` (`?impound=1`).
+- Server: `resource/server/index.ts` only imports the features: list `server/list.ts`, take out `server/takeOut.ts`, park `server/park/` (who may park `parkable.ts`, stored look `props.ts`), ai-core's garage layer exports `server/exports.ts`; who may use a garage's vehicles `server/access.ts`, garage area `server/area.ts`, stored condition `server/condition.ts`; panel views `server/panel.ts`, schema `server/schema.ts`.
+- Client: garage points (lib `RecordObjects` + `Points`, blip on the "open" point; an edited garage rebuilds only its points, a settings change or a membership change rebuilds all / the locked ones) and the list screen `client/garages/`; panel mirror `client/world.ts`.
+- NUI (tgiann-realparking look): `web/src/App.tsx`, rows `web/src/features/garage/VehicleRow.tsx`; browser preview `bun run webdev` (`?impound=1`).
