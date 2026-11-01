@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://github.com/aifivem/ai-garages/compare/v0.2.1...v0.2.2) (2026-11-01)
+
+
+### Code Refactoring
+
+* feature folders, side entries that only import, panel schema per tab ([408ef62](https://github.com/aifivem/ai-garages/commit/408ef62518b30b293c0055035e15c12e7eae46f6))
+
 ## [0.2.1](https://github.com/aifivem/ai-garages/compare/v0.2.0...v0.2.1) (2026-10-31)
 
 
