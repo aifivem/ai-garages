@@ -1,4 +1,4 @@
-import { aiLog, onClientCallback } from "@aifivem/lib/server";
+import { aiLog, onClientCallback, optionalExport } from "@aifivem/lib/server";
 import { fail, readId, readText } from "@aifivem/lib/shared";
 import { EVENTS } from "common/garages";
 import { available, mayUse } from "./access";
@@ -55,6 +55,7 @@ onClientCallback(
       source,
       metadata: { plate: vehicle.plate, garage: garage.id },
     });
+    optionalExport("ai-police")?.ReportSighting(source, "garage");
     return { ok: true, netId };
   },
 );
