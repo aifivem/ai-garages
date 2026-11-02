@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.4](https://github.com/aifivem/ai-garages/compare/v0.2.3...v0.2.4) (2026-11-02)
+
+
+### Documentation
+
+* install from the release zip ([ab18950](https://github.com/aifivem/ai-garages/commit/ab189508a8b78fcecdb1d1af3ce81f8152ee9ce2))
+
+
+### Miscellaneous Chores
+
+* build files are no longer in git, the release zip carries them ([acdb464](https://github.com/aifivem/ai-garages/commit/acdb464e81817ce93177fa58a23b874db4260104))
+
 ## [0.2.3](https://github.com/aifivem/ai-garages/compare/v0.2.2...v0.2.3) (2026-11-02)
 
 
