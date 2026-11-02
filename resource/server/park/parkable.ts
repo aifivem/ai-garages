@@ -1,4 +1,4 @@
-import { entityCoords, isNear } from "@aicore-fivem/lib/server";
+import { entityCoords, isNear } from "@aifivem/lib/server";
 
 /** Seats checked for other occupants (driver -1 to the last passenger seat of the biggest vehicles). */
 const SEATS = 16;

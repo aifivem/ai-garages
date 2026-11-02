@@ -1,4 +1,4 @@
-import { fuel } from "@aicore-fivem/lib/server";
+import { fuel } from "@aifivem/lib/server";
 
 /** The server-read condition stored with a parked vehicle; fuel through ai-core's fuel layer (any fuel script). */
 export function condition(entity: number): {

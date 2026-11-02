@@ -1,4 +1,4 @@
-import { AdminPanel } from "@aicore-fivem/lib/server";
+import { AdminPanel } from "@aifivem/lib/server";
 import { readGarage, readSettings } from "common/garages";
 import { garagesSchema } from "./schema";
 

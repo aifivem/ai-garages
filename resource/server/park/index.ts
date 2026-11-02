@@ -3,13 +3,13 @@ import {
   entityCoords,
   onClientCallback,
   vehicleFromNet,
-} from "@aicore-fivem/lib/server";
+} from "@aifivem/lib/server";
 import {
   fail,
   readId,
   readText,
   toVehicleProps,
-} from "@aicore-fivem/lib/shared";
+} from "@aifivem/lib/shared";
 import { EVENTS } from "common/garages";
 import { mayUse } from "../access";
 import { inArea, inGarage } from "../area";

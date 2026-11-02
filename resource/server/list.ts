@@ -1,5 +1,5 @@
-import { onClientCallback } from "@aicore-fivem/lib/server";
-import { fail, readText } from "@aicore-fivem/lib/shared";
+import { onClientCallback } from "@aifivem/lib/server";
+import { fail, readText } from "@aifivem/lib/shared";
 import { EVENTS, type GarageList } from "common/garages";
 import { available } from "./access";
 import { inGarage } from "./area";

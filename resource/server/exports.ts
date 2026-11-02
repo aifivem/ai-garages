@@ -1,5 +1,5 @@
-import { online, registerExport } from "@aicore-fivem/lib/server";
-import type { GaragedVehicle } from "@aicore-fivem/shared";
+import { online, registerExport } from "@aifivem/lib/server";
+import type { GaragedVehicle } from "@aifivem/shared";
 import { condition } from "./condition";
 import { vehiclesApi } from "./core";
 import { garages } from "./panel";

@@ -1,5 +1,5 @@
-import { aiLog, onClientCallback } from "@aicore-fivem/lib/server";
-import { fail, readId, readText } from "@aicore-fivem/lib/shared";
+import { aiLog, onClientCallback } from "@aifivem/lib/server";
+import { fail, readId, readText } from "@aifivem/lib/shared";
 import { EVENTS } from "common/garages";
 import { available, mayUse } from "./access";
 import { inGarage } from "./area";

@@ -1,6 +1,6 @@
-import { EntityState } from "@aicore-fivem/lib/server";
-import { toVehicleProps, type VehicleProps } from "@aicore-fivem/lib/shared";
-import { VEHICLE_BAGS, type OwnedVehicle } from "@aicore-fivem/shared";
+import { EntityState } from "@aifivem/lib/server";
+import { toVehicleProps, type VehicleProps } from "@aifivem/lib/shared";
+import { VEHICLE_BAGS, type OwnedVehicle } from "@aifivem/shared";
 
 /** The look and tuning the server knows: ai-vehicles' / ai-mechanic's bag on the entity. */
 const propsBag = new EntityState(

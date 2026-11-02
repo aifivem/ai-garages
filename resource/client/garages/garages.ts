@@ -8,8 +8,8 @@ import {
   NuiScreen,
   Points,
   vehicleLabel,
-} from "@aicore-fivem/lib/client";
-import { isPublic, RecordObjects } from "@aicore-fivem/lib/shared";
+} from "@aifivem/lib/client";
+import { isPublic, RecordObjects } from "@aifivem/lib/shared";
 import { Locale } from "common";
 import {
   EVENTS,
