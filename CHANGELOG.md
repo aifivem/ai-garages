@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.3](https://github.com/aifivem/ai-garages/compare/v0.2.2...v0.2.3) (2026-11-02)
+
+
+### Bug Fixes
+
+* **build:** keep the web build in dist/ so release zips have the NUI ([2408c45](https://github.com/aifivem/ai-garages/commit/2408c45f1a39c9e21d32efa39e42668fbbcb6dc5))
+
+
+### Code Refactoring
+
+* import the shared packages from [@aifivem](https://github.com/aifivem) ([ef705fa](https://github.com/aifivem/ai-garages/commit/ef705fa4166a1c12829038d9ac845eb4e6ca5483))
+
 ## [0.2.2](https://github.com/aifivem/ai-garages/compare/v0.2.1...v0.2.2) (2026-11-01)
 
 
