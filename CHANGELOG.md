@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/aifivem/ai-garages/compare/v0.2.4...v0.3.0) (2026-11-02)
+
+
+### New Features
+
+* **garages:** report wanted suspects to ai-police on a take-out ([5e1b7bd](https://github.com/aifivem/ai-garages/commit/5e1b7bdc1ec95f3877e293ffbffd9531526c16ae))
+
 ## [0.2.4](https://github.com/aifivem/ai-garages/compare/v0.2.3...v0.2.4) (2026-11-02)
 
 
