@@ -50,13 +50,7 @@
   ],
   "packages": {
     ".": {
-      "package-name": "ai-garages",
-      "extra-files": [
-        {
-          "type": "generic",
-          "path": "fxmanifest.lua"
-        }
-      ]
+      "package-name": "ai-garages"
     }
   }
 }
